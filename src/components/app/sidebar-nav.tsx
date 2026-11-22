@@ -12,7 +12,15 @@ function isActive(pathname: string, href: string) {
 
 /** Desktop sidebar links with a sliding active indicator. */
 export function SidebarNav() {
-  const pathname = usePathname();
+  return <SidebarLinks pathname={usePathname()} />;
+}
+
+/** Same links without an active state, for the <Suspense> fallback on dynamic routes. */
+export function SidebarNavFallback() {
+  return <SidebarLinks pathname="" />;
+}
+
+function SidebarLinks({ pathname }: { pathname: string }) {
   return (
     <nav aria-label="Principal" className="flex flex-col gap-1">
       {NAV_ITEMS.map(({ href, label, Icon }) => {
@@ -45,7 +53,14 @@ export function SidebarNav() {
 
 /** Mobile bottom tab bar (thumb reach). */
 export function TabBar() {
-  const pathname = usePathname();
+  return <TabLinks pathname={usePathname()} />;
+}
+
+export function TabBarFallback() {
+  return <TabLinks pathname="" />;
+}
+
+function TabLinks({ pathname }: { pathname: string }) {
   return (
     <nav
       aria-label="Principal"

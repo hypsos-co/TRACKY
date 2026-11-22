@@ -7,7 +7,7 @@ test.describe("authentication (real Supabase)", () => {
     await signUp(page, { name: "Ana García", email });
 
     await expect(page.getByRole("heading", { level: 1, name: "Hola, Ana García" })).toBeVisible();
-    await expect(page.getByRole("main").getByText(email)).toBeVisible();
+    await expect(page.getByRole("region", { name: "Tareas de hoy" })).toBeVisible();
     await expectAccessible(page);
 
     // Sign out from Ajustes (full page load), then the app is closed again.

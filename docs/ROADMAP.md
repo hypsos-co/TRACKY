@@ -19,14 +19,22 @@ Leyenda: ✅ hecho · 🟡 en curso · ⬜ pendiente. La auditoría de partida e
 
 ## Fase 2 · Núcleo — desglose
 
-- [ ] Modelo de datos: `workspaces`, `workspace_members`, `projects`, `task_statuses`, `tasks` (subtareas), `tags`, `task_tags`, `events`, `dashboards`, `dashboard_widgets` + RLS por membresía + pgTAP
-- [ ] Backfill del workspace personal para usuarios existentes (producción tiene 1 usuario real)
-- [ ] Shell: selector de workspace, navegación por módulos, paleta ⌘K (buscar + crear), diálogos y toasts
-- [ ] Tareas: lista por secciones (Hoy, Próximas, Sin fecha, Hechas), alta rápida, detalle editable, subtareas, prioridades, estados, etiquetas, filtros
-- [ ] Proyectos: listado, alta/edición, detalle con tareas y progreso calculado
-- [ ] Calendario: vistas día/semana/mes/año, eventos y tareas con fecha, alta/edición, mover bloques
-- [ ] Dashboard: widgets con datos reales; añadir, quitar, reordenar (drag & drop), cambiar tamaño; persistidos
-- [ ] E2E de cada flujo + `expectAccessible`
+- [x] Modelo de datos: `workspaces`, `workspace_members`, `projects`, `task_statuses`, `tasks` (subtareas), `tags`, `task_tags`, `events`, `dashboards`, `dashboard_widgets` + RLS por membresía + pgTAP
+- [x] Backfill del workspace personal para usuarios existentes (producción tiene 1 usuario real)
+- [x] Shell: selector de workspace, navegación por módulos, paleta ⌘K (buscar + crear), diálogos y toasts
+- [x] Tareas: lista por secciones (Hoy, Próximas, Sin fecha, Hechas), alta rápida, detalle editable, subtareas, prioridades, estados, etiquetas, filtros
+- [x] Proyectos: listado, alta/edición, detalle con tareas y progreso calculado
+- [x] Calendario: vistas día/semana/mes/año, eventos y tareas con fecha, alta/edición, mover bloques
+- [x] Dashboard: widgets con datos reales; añadir, quitar, reordenar (drag & drop), cambiar tamaño; persistidos
+- [x] E2E de cada flujo + `expectAccessible`
+
+### Fase 2 · pendiente (se completa en fases posteriores)
+
+- Eventos recurrentes y repeticiones de tareas (RRULE) → Fase 4 junto a rutinas.
+- Recordatorios → Fase 7 (notificaciones).
+- Dependencias entre tareas, adjuntos y registro de actividad → Fase 4/5.
+- Dashboards múltiples y por workspace (el modelo ya lo soporta; falta la UI).
+- Estados de tarea editables desde la UI (la tabla ya es configurable).
 
 ## Pendiente del propietario
 

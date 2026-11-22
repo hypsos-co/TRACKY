@@ -15,6 +15,9 @@ export const ROUTES = {
   authError: "/auth/error",
   signOut: "/auth/sign-out",
   dashboard: "/dashboard",
+  tasks: "/tasks",
+  projects: "/projects",
+  calendar: "/calendar",
   settings: "/settings",
 } as const;
 
