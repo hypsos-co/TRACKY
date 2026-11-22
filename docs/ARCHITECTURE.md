@@ -33,7 +33,7 @@ src/
     page.tsx                 landing pública
     manifest.ts, icon.svg, apple-icon.png   PWA
     (auth)/                  login, sign-up, sign-up/success, forgot-password, update-password
-    (app)/                   shell autenticado (sidebar + tab bar): dashboard, settings
+    (app)/                   shell autenticado: dashboard (widgets), tasks, projects, calendar, settings
     auth/callback/route.ts   enlaces de email (PKCE ?code= y ?token_hash=) y OAuth futuro
     auth/sign-out/route.ts   POST → cierra sesión + recarga completa
     auth/error/page.tsx      enlace caducado / inválido
@@ -44,6 +44,10 @@ src/
     routes.ts                reglas de acceso (default-deny) + safeNextPath()
     supabase/{client,server,proxy}.ts, database.types.ts (generado)
     auth/{actions,session,schemas,errors,form-state}.ts
+    workspace.ts, workspace-actions.ts   workspace actual (cookie validada contra membresía) + cambio/creación
+    tasks/ projects/ calendar/ dashboard/ {data.ts lecturas, actions.ts Server Actions con Zod}
+    dates.ts                 días ISO sin desfase + zonas horarias (Intl, DST)
+    search.ts                búsqueda universal (⌘K)
   proxy.ts                   Next.js Proxy (antes "middleware")
 supabase/
   config.toml                stack local (auth, MFA TOTP, políticas de contraseña)
