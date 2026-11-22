@@ -14,6 +14,12 @@ describe("authErrorMessage", () => {
     expect(authErrorMessage({ status: 429 })).toMatch(/Demasiados intentos/);
   });
 
+  it("explains when the email provider refuses the address", () => {
+    expect(authErrorMessage({ code: "email_address_not_authorized" })).toMatch(
+      /emails autorizados/,
+    );
+  });
+
   it("does not leak account existence on sign-up", () => {
     expect(authErrorMessage({ code: "user_already_exists" })).not.toMatch(/existe/i);
   });
