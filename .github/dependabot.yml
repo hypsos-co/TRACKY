@@ -1,0 +1,23 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    target-branch: main
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      minor-and-patch:
+        update-types: [minor, patch]
+    ignore:
+      # Major upgrades (TypeScript 7, ESLint 10, …) are planned by hand, not auto-bumped.
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+      # Pinned to the Chromium build preinstalled in the cloud dev environment.
+      - dependency-name: "@playwright/test"
+      - dependency-name: "playwright-core"
+  - package-ecosystem: github-actions
+    directory: /
+    target-branch: main
+    schedule:
+      interval: weekly
