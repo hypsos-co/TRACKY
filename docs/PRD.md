@@ -53,7 +53,7 @@ Todos los módulos se pueden **activar/desactivar** y personalizar.
 - **Accesibilidad:** WCAG 2.1 AA (verificado con axe en E2E y revisión manual).
 - **Rendimiento:** shell estático instantáneo; contenido del usuario en streaming; Lighthouse ≥ 90 en Performance/Accessibility/Best Practices.
 - **Seguridad:** RLS en todas las tablas, secretos fuera del código, OWASP Top 10 (ver `ARCHITECTURE.md` §5).
-- **Coste:** 0–10 €/mes (niveles gratuitos de Vercel y Supabase; IA con presupuesto limitado).
+- **Coste:** 0–10 €/mes (niveles gratuitos de Netlify y Supabase; IA con presupuesto limitado).
 - **Idioma:** español primero; textos centralizables para i18n posterior.
 
 ## 5. Criterios de aceptación (todas las fases)

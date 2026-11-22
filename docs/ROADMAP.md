@@ -30,9 +30,10 @@ Leyenda: ✅ hecho · 🟡 en curso · ⬜ pendiente
 - [x] CI (GitHub Actions), workflow manual de migraciones, Dependabot, cabeceras de seguridad
 - [x] Documentación completa en `docs/`
 
-### Pendiente de Fase 1 que requiere al propietario
+### Puesta en producción
 
-- [ ] Crear el proyecto Supabase Cloud y compartir URL + clave publishable (o configurarlas directamente en Vercel)
-- [ ] Conectar el repositorio a Vercel
+- [x] Supabase Cloud "TRACKY APP": migración aplicada, Auth configurado (URLs, reglas de contraseña, confirmación de email)
+- [x] Publicada en Netlify desde `main`: https://tracky-7suj.netlify.app (previews protegidos)
+- [ ] Cambiar la rama por defecto de GitHub a `main` y protegerla (propietario)
+- [ ] SMTP propio para emails de Auth antes de abrir el registro a otras personas (Fase 9 o antes)
 - [ ] Confirmar licencias tipográficas (ver `DESIGN_SYSTEM.md` §3)
-- [ ] Rama `main` protegida en GitHub

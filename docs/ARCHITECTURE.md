@@ -3,7 +3,7 @@
 ## 1. Visión general
 
 ```
- Navegador (PWA)                       Vercel (Next.js 16)                     Supabase
+ Navegador (PWA)                       Netlify (Next.js 16)                     Supabase
  ─────────────────                     ───────────────────                     ────────
  React 19 · Tailwind v4   ──HTTPS──▶   src/proxy.ts  (refresca sesión,         Auth (GoTrue)
  Client Components                     guardas optimistas de rutas)            PostgreSQL + RLS
@@ -20,7 +20,7 @@
 | Validación | Zod                                                                         | 4                  |
 | Backend    | Supabase (`@supabase/ssr`, `@supabase/supabase-js`, CLI como devDependency) | 0.12 · 2.119 · 3.2 |
 | Tests      | Vitest + Testing Library · Playwright + axe-core · pgTAP                    | 5 · 1.63 · —       |
-| Hosting    | Vercel (frontend) · Supabase Cloud (backend)                                | —                  |
+| Hosting    | Netlify (frontend, `@netlify/plugin-nextjs`) · Supabase Cloud (backend)     | —                  |
 
 > **Next.js 16 no es el Next.js de los tutoriales.** `middleware.ts` ahora se llama `proxy.ts`; con Cache Components las lecturas de cookies deben ir dentro de `<Suspense>`; las páginas visitadas se conservan ocultas con `<Activity>`. La documentación exacta de la versión instalada está en `node_modules/next/dist/docs/` (ver `AGENTS.md`).
 
@@ -83,35 +83,44 @@ Flujos:
 
 ## 5. Seguridad
 
-- TLS extremo a extremo (Vercel y Supabase). Cabeceras: HSTS, `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy`, `Permissions-Policy` (`next.config.ts`). CSP con nonce → Fase 9.
+- TLS extremo a extremo (Netlify y Supabase). Cabeceras: HSTS, `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy`, `Permissions-Policy` (`next.config.ts`). CSP con nonce → Fase 9.
 - Solo la clave **publishable** (`sb_publishable_…`) llega al navegador. Las claves secretas nunca llevan prefijo `NEXT_PUBLIC_`.
 - Contraseñas: mínimo 8, letras + dígitos (servidor de Auth y Zod coinciden). MFA TOTP habilitado en `config.toml` (UI en Fase 1b/9).
 - Dependabot semanal (npm + Actions).
 
 ## 6. Entornos y despliegue
 
-| Entorno              | Frontend                                    | Backend                          |
-| -------------------- | ------------------------------------------- | -------------------------------- |
-| Local                | `npm run dev`                               | `npm run db:start` (Docker)      |
-| CI                   | build de producción                         | Supabase local dentro del runner |
-| Preview / Producción | Vercel (integración Git: cada PR = preview) | Proyecto Supabase Cloud          |
+| Entorno    | Frontend                                                                  | Backend                                                       |
+| ---------- | ------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| Local      | `npm run dev`                                                             | `npm run db:start` (Docker)                                   |
+| CI         | build de producción                                                       | Supabase local dentro del runner                              |
+| Previews   | Netlify: un deploy preview por PR (protegido con login de Netlify)        | Proyecto Supabase Cloud (el de producción)                    |
+| Producción | **Netlify** `tracky-7suj` → https://tracky-7suj.netlify.app (rama `main`) | **Supabase** "TRACKY APP" (`rvllatnbyujiafercdwe`, eu-west-1) |
+
+### Estado actual de producción
+
+- **Netlify** (equipo "Júlio César Gonçalves's team", plan Free): repo `hypsos-co/TRACKY` enlazado; rama de producción `main` (solo `main` genera deploys de rama); runtime `@netlify/plugin-nextjs` v5; protección de visitantes solo en deploys que no son de producción.
+- **Supabase** (organización "Tracky", plan Free): migración `20261122190000_init_profiles` aplicada y registrada en `supabase_migrations.schema_migrations`.
+  Auth: _Site URL_ `https://tracky-7suj.netlify.app`; _Redirect URLs_ `https://tracky-7suj.netlify.app/auth/callback`, `https://*--tracky-7suj.netlify.app/auth/callback`, `http://localhost:3000/auth/callback`; contraseña ≥ 8 con letras y dígitos; **confirmación de email activada**.
+- **Limitación del email en el plan gratuito:** el proveedor de email integrado de Supabase solo envía a los miembros del equipo del proyecto (hoy `hypsos.co@gmail.com`), máximo 2 por hora, y no permite editar plantillas. Por eso los enlaces de confirmación/recuperación usan el flujo PKCE (`?code=`) y **deben abrirse en el mismo navegador** donde se pidieron. Antes de abrir TRACKY a otras personas: configurar SMTP propio (p. ej. Resend, gratis hasta 3 000 emails/mes) y las plantillas `token_hash` de §3.
 
 ### Variables de entorno
 
-| Variable                                                               | Dónde                                    | Secreta          |
-| ---------------------------------------------------------------------- | ---------------------------------------- | ---------------- |
-| `NEXT_PUBLIC_SUPABASE_URL`                                             | `.env.local`, Vercel                     | No               |
-| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (o `…_ANON_KEY`)                | `.env.local`, Vercel                     | No (RLS protege) |
-| `NEXT_PUBLIC_SITE_URL`                                                 | Vercel (producción)                      | No               |
-| `SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD`, `SUPABASE_PROJECT_ID` | GitHub Secrets (workflow de migraciones) | **Sí**           |
+| Variable                                                               | Dónde                                       | Secreta          |
+| ---------------------------------------------------------------------- | ------------------------------------------- | ---------------- |
+| `NEXT_PUBLIC_SUPABASE_URL`                                             | `.env.local`, Netlify (todos los contextos) | No               |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (o `…_ANON_KEY`)                | `.env.local`, Netlify (todos los contextos) | No (RLS protege) |
+| `NEXT_PUBLIC_SITE_URL`                                                 | Netlify (solo producción)                   | No               |
+| `SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD`, `SUPABASE_PROJECT_ID` | GitHub Secrets (workflow de migraciones)    | **Sí**           |
 
-### Puesta en producción (una vez)
+Las variables `NEXT_PUBLIC_*` se incrustan al compilar: tras cambiarlas hay que volver a desplegar.
 
-1. Crear proyecto en Supabase (plan gratuito). Auth → URL Configuration: _Site URL_ = dominio de producción; _Redirect URLs_ = `https://<dominio>/auth/callback` y `https://*-<equipo>.vercel.app/auth/callback` para previews.
-2. Importar el repo en Vercel; añadir las variables públicas de la tabla.
-3. GitHub → Settings → Secrets: `SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD`, `SUPABASE_PROJECT_ID`
-   (`gh secret set SUPABASE_ACCESS_TOKEN` …).
-4. Ejecutar el workflow **Deploy database migrations** (manual, escribe `migrate` para confirmar).
+### Aplicar migraciones a producción
+
+Cualquiera de estas dos vías, **siempre con confirmación explícita del propietario**:
+
+1. Workflow manual **Deploy database migrations** (`db-migrate.yml`, escribe `migrate`), con los secretos de GitHub de la tabla.
+2. Desde una sesión de Claude Code en el entorno cloud "TRACKY", que guarda los tokens de Supabase (`api.supabase.com`) y Netlify (`api.netlify.com`) como _network secrets_: `POST /v1/projects/rvllatnbyujiafercdwe/database/query` con el SQL de la migración + registro en `supabase_migrations.schema_migrations`.
 
 ### CI (`.github/workflows/ci.yml`)
 

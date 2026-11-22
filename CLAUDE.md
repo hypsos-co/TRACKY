@@ -28,7 +28,7 @@ Lee `docs/ROADMAP.md` para saber en qué fase estamos y `docs/MASTER_PROMPT.md` 
 
 - Nunca claves secretas con prefijo `NEXT_PUBLIC_` ni en el repo (`.env*` está ignorado salvo `.env.example`).
 - Pide confirmación explícita antes de: borrar datos, migraciones que transformen/borren datos, `supabase db push` a producción, force-push.
-- Si necesitas credenciales (Supabase Cloud, OAuth, IA), pídelas al propietario; documenta dónde se configuran (`gh secret set …`, Vercel env).
+- Si necesitas credenciales (Supabase Cloud, OAuth, IA), pídelas al propietario; documenta dónde se configuran (`gh secret set …`, variables de Netlify).
 
 ## Antes de dar algo por terminado
 
@@ -39,6 +39,12 @@ npm run build && npm run test:e2e
 ```
 
 Ningún test se salta ni se desactiva para conseguir verde. Actualiza `docs/` (PRD, TESTING, ROADMAP y el doc del área) en el mismo PR.
+
+## Producción
+
+- Web: Netlify `tracky-7suj` (rama `main`). Base de datos: Supabase "TRACKY APP" (`rvllatnbyujiafercdwe`). Detalle en `docs/ARCHITECTURE.md` §6.
+- En el entorno cloud "TRACKY" hay tokens guardados para `api.supabase.com` y `api.netlify.com` (los inyecta el proxy; nunca los imprimas ni los pidas en el chat).
+- Cualquier cambio en producción (migraciones, variables, ajustes de Auth) requiere confirmación explícita del propietario.
 
 ## Entorno sin Docker Hub/ECR
 
