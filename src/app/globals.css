@@ -1,0 +1,269 @@
+@import "tailwindcss";
+@import "@fontsource-variable/inter/wght.css";
+
+/*
+ * TRACKY design tokens — see docs/DESIGN_SYSTEM.md
+ *
+ * Brand palette (supplied):
+ *   Ink   #0B0F14  · Navy #0B1A5C · Royal #2F5BFF · Lime #D4F53C · White #FFFFFF
+ *   Ice   #EFF8FF  · Neon lime #BBEF1F · Void #0D0303 · Signal #FF0055
+ * Derived values (tints/shades) exist only to reach WCAG 2.1 AA contrast
+ * and are documented with their ratio in DESIGN_SYSTEM.md.
+ *
+ * Dark is the default theme. `data-theme="light"` on <html> switches it.
+ */
+
+:root {
+  color-scheme: dark;
+
+  /* Raw brand colours */
+  --brand-ink: #0b0f14;
+  --brand-navy: #0b1a5c;
+  --brand-royal: #2f5bff;
+  --brand-lime: #d4f53c;
+  --brand-neon: #bbef1f;
+  --brand-ice: #eff8ff;
+  --brand-void: #0d0303;
+  --brand-signal: #ff0055;
+  --brand-white: #ffffff;
+
+  /* Semantic — dark */
+  --bg: var(--brand-ink);
+  --fg: var(--brand-ice);
+  --fg-muted: #9da4aa; /* 7.6:1 on ink */
+  --fg-subtle: #7d848a; /* 5.1:1 on ink */
+
+  --surface: rgb(239 248 255 / 0.045);
+  --surface-strong: rgb(239 248 255 / 0.08);
+  --surface-solid: #11161d;
+  --border: rgb(239 248 255 / 0.09);
+  --border-strong: rgb(239 248 255 / 0.16);
+  --glass-highlight: rgb(255 255 255 / 0.08);
+  --glass-shadow: 0 24px 60px -20px rgb(0 0 0 / 0.6);
+
+  --primary: var(--brand-royal); /* fills; white text 5.2:1 */
+  --primary-fg: var(--brand-white);
+  --primary-text: #829dff; /* royal tint for text/links on ink, 7.5:1 */
+
+  --accent: var(--brand-neon); /* "lime gets the click" */
+  --accent-fg: var(--brand-void); /* 15:1 */
+  --accent-glow: rgb(187 239 31 / 0.35);
+
+  --danger: var(--brand-signal); /* 4.9:1 on ink */
+  --danger-fg: var(--brand-void); /* 5.3:1 on signal */
+  --danger-text: var(--brand-signal);
+  --danger-surface: rgb(255 0 85 / 0.1);
+
+  --success-text: var(--brand-neon);
+  --success-surface: rgb(187 239 31 / 0.1);
+
+  --ring: #829dff;
+
+  --ambient-1: rgb(11 26 92 / 0.85); /* navy */
+  --ambient-2: rgb(47 91 255 / 0.22); /* royal */
+  --ambient-3: rgb(187 239 31 / 0.08); /* lime */
+
+  --radius-card: 1.5rem;
+  --radius-field: 0.875rem;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --bg: var(--brand-ice);
+  --fg: var(--brand-ink);
+  --fg-muted: #4b5058; /* ~7.5:1 on ice */
+  --fg-subtle: #62676e; /* ~5.3:1 on ice */
+
+  --surface: rgb(255 255 255 / 0.62);
+  --surface-strong: rgb(255 255 255 / 0.85);
+  --surface-solid: #ffffff;
+  --border: rgb(11 15 20 / 0.08);
+  --border-strong: rgb(11 15 20 / 0.16);
+  --glass-highlight: rgb(255 255 255 / 0.9);
+  --glass-shadow: 0 24px 60px -24px rgb(11 26 92 / 0.25);
+
+  --primary: var(--brand-royal);
+  --primary-fg: var(--brand-white);
+  --primary-text: #2649cc; /* royal shade, 6.8:1 on ice */
+
+  --accent: var(--brand-lime);
+  --accent-fg: var(--brand-ink);
+  --accent-glow: rgb(212 245 60 / 0.55);
+
+  --danger: var(--brand-signal);
+  --danger-fg: var(--brand-void);
+  --danger-text: #cc0044; /* signal shade, 5.4:1 */
+  --danger-surface: rgb(255 0 85 / 0.08);
+
+  --success-text: #556218; /* lime shade, 6.3:1 */
+  --success-surface: rgb(212 245 60 / 0.25);
+
+  --ring: var(--brand-royal);
+
+  --ambient-1: rgb(47 91 255 / 0.18);
+  --ambient-2: rgb(212 245 60 / 0.3);
+  --ambient-3: rgb(11 26 92 / 0.08);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-subtle: var(--fg-subtle);
+  --color-surface: var(--surface);
+  --color-surface-strong: var(--surface-strong);
+  --color-surface-solid: var(--surface-solid);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-primary: var(--primary);
+  --color-primary-fg: var(--primary-fg);
+  --color-primary-text: var(--primary-text);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-danger: var(--danger);
+  --color-danger-fg: var(--danger-fg);
+  --color-danger-text: var(--danger-text);
+  --color-danger-surface: var(--danger-surface);
+  --color-success-text: var(--success-text);
+  --color-success-surface: var(--success-surface);
+  --color-ring: var(--ring);
+
+  --color-ink: var(--brand-ink);
+  --color-navy: var(--brand-navy);
+  --color-royal: var(--brand-royal);
+  --color-lime: var(--brand-lime);
+  --color-neon: var(--brand-neon);
+  --color-ice: var(--brand-ice);
+  --color-void: var(--brand-void);
+  --color-signal: var(--brand-signal);
+
+  --font-sans:
+    "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Inter Variable", "Inter",
+    system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "SF Mono", ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace;
+
+  --radius-card: var(--radius-card);
+  --radius-field: var(--radius-field);
+
+  --ease-out: var(--ease-out);
+  --ease-spring: var(--ease-spring);
+
+  --animate-rise: rise 0.6s var(--ease-out) both;
+  --animate-fade: fade 0.4s var(--ease-out) both;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.985);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@layer base {
+  html {
+    background: var(--bg);
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* No body background: it would paint over the fixed .ambient layer (z-index -1). */
+  body {
+    color: var(--fg);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11";
+    letter-spacing: -0.005em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--accent-fg);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* Liquid glass panel: translucent fill, blur, hairline border, top highlight. */
+  .glass {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow:
+      inset 0 1px 0 0 var(--glass-highlight),
+      var(--glass-shadow);
+    -webkit-backdrop-filter: blur(24px) saturate(160%);
+    backdrop-filter: blur(24px) saturate(160%);
+  }
+
+  .glass-strong {
+    background: var(--surface-strong);
+    border: 1px solid var(--border-strong);
+    box-shadow:
+      inset 0 1px 0 0 var(--glass-highlight),
+      var(--glass-shadow);
+    -webkit-backdrop-filter: blur(32px) saturate(180%);
+    backdrop-filter: blur(32px) saturate(180%);
+  }
+
+  /* Opaque-enough glass for bars that float over scrolling content (tab bar). */
+  .glass-bar {
+    background: color-mix(in srgb, var(--bg) 72%, transparent);
+    border: 1px solid var(--border-strong);
+    box-shadow:
+      inset 0 1px 0 0 var(--glass-highlight),
+      var(--glass-shadow);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    backdrop-filter: blur(28px) saturate(180%);
+  }
+
+  /* Fixed ambient backdrop — navy/royal/lime glows, echoing the brand gradient. */
+  .ambient {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(60% 50% at 12% 0%, var(--ambient-1), transparent 70%),
+      radial-gradient(45% 40% at 95% 15%, var(--ambient-2), transparent 70%),
+      radial-gradient(40% 35% at 70% 100%, var(--ambient-3), transparent 70%), var(--bg);
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+}

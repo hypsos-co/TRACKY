@@ -1,0 +1,2 @@
+-- Local development seed data (applied by `supabase db reset`).
+-- Intentionally empty in Phase 1: create a user through the app's sign-up page.

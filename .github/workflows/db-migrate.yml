@@ -1,0 +1,38 @@
+name: Deploy database migrations
+
+# Manual on purpose: schema changes on production need an explicit human go-ahead.
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type "migrate" to apply supabase/migrations to the linked production project'
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  migrate:
+    if: ${{ inputs.confirm == 'migrate' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+      SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Check secrets
+        run: |
+          for v in SUPABASE_ACCESS_TOKEN SUPABASE_DB_PASSWORD SUPABASE_PROJECT_ID; do
+            if [ -z "${!v}" ]; then echo "::error::Missing secret $v (see docs/ARCHITECTURE.md › Deploy)"; exit 1; fi
+          done
+      - run: npx supabase link --project-ref "$SUPABASE_PROJECT_ID"
+      - name: Show pending migrations
+        run: npx supabase migration list
+      - run: npx supabase db push

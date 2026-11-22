@@ -1,0 +1,84 @@
+# TRACKY · Base de datos
+
+PostgreSQL 17 gestionado por Supabase. Identidades en `auth.users` (Supabase Auth); datos de la app en el esquema `public`, **siempre con RLS**.
+
+## 1. Convenciones
+
+- Clave primaria `uuid` (`gen_random_uuid()`) o la del usuario cuando es 1:1.
+- Toda tabla de usuario tiene `user_id uuid not null references auth.users(id) on delete cascade` + índice.
+- `created_at`/`updated_at timestamptz not null default now()`; `updated_at` mediante el trigger reutilizable `public.set_updated_at()`.
+- RLS activado en la misma migración que crea la tabla. Políticas por operación (`select`, `insert`, `update`, `delete`), `to authenticated`, con `(select auth.uid())` (se evalúa una vez por sentencia → más rápido).
+- Restricciones `check` para validar en la BD además de en Zod (defensa en profundidad).
+- Funciones `security definer` siempre con `set search_path = ''` y `revoke execute … from public, anon, authenticated`.
+- Migraciones: `supabase/migrations/<timestamp>_<nombre>.sql`, nunca se editan una vez aplicadas en producción.
+
+## 2. Esquema actual (Fase 1)
+
+### `public.profiles` (1:1 con `auth.users`)
+
+| Columna                    | Tipo          | Restricciones                                  |
+| -------------------------- | ------------- | ---------------------------------------------- |
+| `id`                       | `uuid` PK     | FK `auth.users(id) on delete cascade`          |
+| `display_name`             | `text`        | 1–80 caracteres o `null`                       |
+| `avatar_url`               | `text`        | debe empezar por `https://`                    |
+| `timezone`                 | `text`        | default `'UTC'` (validada como IANA en la app) |
+| `locale`                   | `text`        | default `'es'`, formato `xx` o `xx-YY`         |
+| `created_at`, `updated_at` | `timestamptz` | gestionadas                                    |
+
+- **Trigger `on_auth_user_created`** → `public.handle_new_user()` crea el perfil al registrarse (nombre de `raw_user_meta_data.display_name` o parte local del email).
+- **RLS:** `select` y `update` solo del propio perfil. Sin políticas de `insert`/`delete`: los crea el trigger y se borran en cascada al eliminar la cuenta.
+- **Privilegios de columna:** `authenticated` solo puede actualizar `display_name, avatar_url, timezone, locale`. `anon` no tiene ningún privilegio.
+
+```sql
+create policy "profiles: owner can update"
+  on public.profiles for update to authenticated
+  using ((select auth.uid()) = id)
+  with check ((select auth.uid()) = id);
+```
+
+Cobertura: `supabase/tests/database/profiles.test.sql` (17 aserciones pgTAP: trigger, aislamiento entre usuarios, anon sin acceso, columnas gestionadas, constraints, cascada).
+
+## 3. Modelo planificado (fases siguientes)
+
+| Tabla                                            | Campos esenciales                                                                                         | Fase  |
+| ------------------------------------------------ | --------------------------------------------------------------------------------------------------------- | ----- |
+| `projects`                                       | id, user_id, name, color, archived_at                                                                     | 2     |
+| `tasks`                                          | id, user_id, project_id?, parent_id? (subtareas), title, status, priority, due_at, completed_at, position | 2 / 4 |
+| `trackers`                                       | id, user_id, name, icon, schema (jsonb: propiedades y tipos), template_key                                | 2 / 3 |
+| `tracker_entries`                                | id, tracker_id, user_id, recorded_at, values (jsonb), note                                                | 3     |
+| `goals`                                          | id, user_id, tracker_id?, property_key, target_value, start_value, direction, due_at, achieved_at         | 4     |
+| `goal_milestones`                                | id, goal_id, user_id, value, label, reached_at                                                            | 4     |
+| `habits`                                         | id, user_id, name, schedule (rrule/jsonb), archived_at                                                    | 4     |
+| `habit_logs`                                     | id, habit_id, user_id, day (date), status                                                                 | 4     |
+| `content_items`                                  | id, user_id, title, type, status, publish_at, platform, metrics (jsonb)                                   | 5     |
+| `transactions`                                   | id, user_id, kind (income/expense), category, amount (numeric(12,2)), currency, occurred_on               | 5     |
+| `notes`                                          | id, user_id, title, body (markdown), embedding (vector)                                                   | 5 / 6 |
+| `ai_conversations`, `ai_messages`, `ai_memories` | historial y memoria del asistente                                                                         | 6     |
+| `integrations`                                   | id, user_id, provider, status, scopes, last_synced_at (tokens cifrados con Vault)                         | 7     |
+| `notifications`                                  | id, user_id, kind, payload, read_at                                                                       | 4+    |
+| `audit_log`                                      | id, user_id, action, entity, entity_id, meta, created_at (solo insert)                                    | 6 / 9 |
+
+Notas de diseño:
+
+- **Rachas de hábitos** se calculan desde `habit_logs` (vista o función), no se almacenan como contador mutable.
+- **Progreso de objetivos** se deriva de la última entrada del tracker vinculado (vista `goal_progress`).
+- **Trackers flexibles** (tipo Notion): el esquema de propiedades vive en `trackers.schema` y los valores en `tracker_entries.values`, validados por la app y por un `check` con `jsonb_matches_schema` si se adopta `pg_jsonschema`.
+- **Equipos** (futuro multiusuario): se añadirá `workspaces` + `workspace_members` y las políticas pasarán a "miembro del workspace"; por eso todas las tablas llevan `user_id` desde ya.
+
+## 4. Flujo de trabajo
+
+```bash
+npm run db:start                         # stack local (Docker)
+npx supabase migration new add_tasks     # nuevo archivo en supabase/migrations
+npm run db:reset                         # re-aplica todas las migraciones desde cero
+npm run test:db                          # pgTAP
+npx supabase db lint --level warning     # linter de esquema
+npm run db:types                         # regenera src/lib/supabase/database.types.ts
+```
+
+Producción: workflow manual **Deploy database migrations** (`supabase db push`). Cualquier migración que borre o transforme datos se marca en el PR y requiere confirmación explícita.
+
+## 5. Exportación y borrado (RGPD)
+
+- Borrar la cuenta (`auth.admin.deleteUser`, vía Edge Function con service role) elimina en cascada todos los datos del usuario.
+- Exportación JSON/CSV de todas las tablas del usuario: Edge Function `export-my-data` (Fase 9).
