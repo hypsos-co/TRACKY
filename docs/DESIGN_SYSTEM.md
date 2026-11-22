@@ -3,6 +3,14 @@
 > Fuente de verdad del aspecto visual. Los tokens viven en `src/app/globals.css`;
 > este documento explica **qué** son, **por qué** y **cómo** usarlos.
 
+## 0. Estado: identidad **provisional**
+
+La identidad visual definitiva está **pendiente de entrega** (paleta, tipografías, logotipo, iconografía, referencias, naming).
+
+- Los valores actuales salen de los activos que compartiste el 22/11/2026 (paletas _Madison_ y _Neón Lux_, SF Pro / Baby Shower, logo estrella). Se tratan como **provisionales**: no se añaden colores ni fuentes nuevos fuera de los tokens.
+- Toda la interfaz consume **tokens semánticos** (`--bg`, `--fg`, `--accent`, `--primary`…) definidos en un solo lugar (`src/app/globals.css`). Sustituir la marca = cambiar los valores de `--brand-*`, la pila tipográfica y `src/components/brand/*`; los componentes no cambian.
+- Pendiente de definir: iconografía propia (hoy `lucide-react`), ilustraciones, naming definitivo, uso del wordmark.
+
 ## 1. Principios
 
 1. **Oscuro por defecto, premium y sobrio** — inspirado en Linear (densidad, oscuridad profesional), Apple (vidrio líquido, tipografía SF, movimiento físico) y Notion (modularidad).
