@@ -59,6 +59,10 @@
 
   --ring: #829dff;
 
+  /* Data viz: single-series colour, validated (dataviz validator, dark surface #11161d) */
+  --chart-1: #5c7dff;
+  --chart-grid: rgb(239 248 255 / 0.08);
+
   --ambient-1: rgb(11 26 92 / 0.85); /* navy */
   --ambient-2: rgb(47 91 255 / 0.22); /* royal */
   --ambient-3: rgb(187 239 31 / 0.08); /* lime */
@@ -104,6 +108,9 @@
 
   --ring: var(--brand-royal);
 
+  --chart-1: var(--brand-royal);
+  --chart-grid: rgb(11 15 20 / 0.08);
+
   --ambient-1: rgb(47 91 255 / 0.18);
   --ambient-2: rgb(212 245 60 / 0.3);
   --ambient-3: rgb(11 26 92 / 0.08);
@@ -131,6 +138,8 @@
   --color-success-text: var(--success-text);
   --color-success-surface: var(--success-surface);
   --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-grid: var(--chart-grid);
 
   --color-ink: var(--brand-ink);
   --color-navy: var(--brand-navy);

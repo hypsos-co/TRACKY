@@ -55,14 +55,26 @@ Integridad: el trigger `tasks_before_write` impide referenciar proyectos, estado
 
 Cobertura: `supabase/tests/database/core.test.sql` (32 aserciones: seeding, aislamiento entre dos usuarios, rol viewer solo lectura, integridad entre workspaces, anon sin acceso).
 
+### Fase 3 · Trackers (`20261123120000_trackers.sql`)
+
+| Tabla                 | Propósito                                                                                                                         | Acceso (RLS)                                  |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| `trackers`            | Nombre, icono, descripción, `template_key`, `date_property_id` (eje temporal), `archived_at`                                      | Miembros leen; `owner/admin/member` escriben  |
+| `tracker_properties`  | Propiedad tipada (`tracker_property_type`, 18 tipos), `config` JSON < 8 KB, posición; nombre único sin mayúsculas; un solo título | Vía `private.tracker_role_ok(tracker, write)` |
+| `tracker_entries`     | Registro; `values` objeto JSON < 32 KB indexado por id de propiedad                                                               | Igual                                         |
+| `tracker_entry_links` | Relaciones entre registros (FK reales); trigger: mismo workspace y propiedad de tipo `relation`                                   | Igual (a través del registro origen)          |
+| `tracker_views`       | Vista guardada (`table/list/cards/kanban/calendar/chart`) + `config` JSON < 8 KB                                                  | Igual                                         |
+
+`dashboard_widgets.type` admite además `tracker_chart` y `tracker_latest` (con `config.trackerId`).
+
+Cobertura: `supabase/tests/database/trackers.test.sql` (16 aserciones: altas por miembros, nombres de propiedad únicos sin mayúsculas, solo una fecha puede ser eje temporal, `values` debe ser objeto JSON, los enlaces exigen una propiedad `relation`, aislamiento entre usuarios al leer/editar/añadir, anon sin acceso).
+
 ## 3. Modelo planificado (fases siguientes)
 
 | Tabla                                            | Campos esenciales                                                                                         | Fase  |
 | ------------------------------------------------ | --------------------------------------------------------------------------------------------------------- | ----- |
 | `projects`                                       | id, user_id, name, color, archived_at                                                                     | 2     |
 | `tasks`                                          | id, user_id, project_id?, parent_id? (subtareas), title, status, priority, due_at, completed_at, position | 2 / 4 |
-| `trackers`                                       | id, user_id, name, icon, schema (jsonb: propiedades y tipos), template_key                                | 2 / 3 |
-| `tracker_entries`                                | id, tracker_id, user_id, recorded_at, values (jsonb), note                                                | 3     |
 | `goals`                                          | id, user_id, tracker_id?, property_key, target_value, start_value, direction, due_at, achieved_at         | 4     |
 | `goal_milestones`                                | id, goal_id, user_id, value, label, reached_at                                                            | 4     |
 | `habits`                                         | id, user_id, name, schedule (rrule/jsonb), archived_at                                                    | 4     |
@@ -79,7 +91,7 @@ Notas de diseño:
 
 - **Rachas de hábitos** se calculan desde `habit_logs` (vista o función), no se almacenan como contador mutable.
 - **Progreso de objetivos** se deriva de la última entrada del tracker vinculado (vista `goal_progress`).
-- **Trackers flexibles** (tipo Notion): el esquema de propiedades vive en `trackers.schema` y los valores en `tracker_entries.values`, validados por la app y por un `check` con `jsonb_matches_schema` si se adopta `pg_jsonschema`.
+- **Trackers flexibles** (tipo Notion, ✅ Fase 3): propiedades como filas tipadas en `tracker_properties` y valores en `tracker_entries.values`, validados en la Server Action; la BD acota tamaño y forma (objeto JSON).
 - **Equipos** (futuro multiusuario): se añadirá `workspaces` + `workspace_members` y las políticas pasarán a "miembro del workspace"; por eso todas las tablas llevan `user_id` desde ya.
 
 ## 4. Flujo de trabajo

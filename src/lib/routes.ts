@@ -18,6 +18,7 @@ export const ROUTES = {
   tasks: "/tasks",
   projects: "/projects",
   calendar: "/calendar",
+  trackers: "/trackers",
   settings: "/settings",
 } as const;
 

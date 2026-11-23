@@ -24,15 +24,26 @@ import {
   SIZE_LABELS,
   WIDGET_SIZES,
   WIDGET_TYPES,
+  needsTracker,
   type WidgetSize,
   type WidgetType,
 } from "@/lib/dashboard/widgets";
-import { Button } from "@/components/ui/button";
+import { Button, buttonClasses } from "@/components/ui/button";
+import Link from "next/link";
 import { Dialog } from "@/components/ui/dialog";
+import { Select } from "@/components/ui/inputs";
 import { useToast } from "@/components/ui/toast";
 import { cn } from "@/lib/utils";
 
-export type GridItem = { id: string; type: WidgetType; size: WidgetSize; node: ReactNode };
+export type GridItem = {
+  id: string;
+  type: WidgetType;
+  size: WidgetSize;
+  /** Overrides the catalogue label in the widget header (e.g. the tracker's name). */
+  title?: string;
+  node: ReactNode;
+};
+type TrackerOption = { id: string; name: string; icon: string | null };
 
 const SPAN: Record<WidgetSize, string> = {
   sm: "sm:col-span-1 xl:col-span-1",
@@ -41,7 +52,13 @@ const SPAN: Record<WidgetSize, string> = {
   full: "sm:col-span-2 xl:col-span-4",
 };
 
-export function DashboardGrid({ items: initial }: { items: GridItem[] }) {
+export function DashboardGrid({
+  items: initial,
+  trackers,
+}: {
+  items: GridItem[];
+  trackers: TrackerOption[];
+}) {
   const [items, setItems] = useState(initial);
   const [editing, setEditing] = useState(false);
   const [adding, setAdding] = useState(false);
@@ -54,7 +71,7 @@ export function DashboardGrid({ items: initial }: { items: GridItem[] }) {
 
   // Widget contents always come from the latest server render; local state only
   // keeps order/size for instant feedback.
-  const nodeById = new Map(initial.map((i) => [i.id, i.node]));
+  const latestById = new Map(initial.map((i) => [i.id, i]));
   // Server data refreshed (e.g. after add/remove): adopt it.
   const serverKey = initial.map((i) => i.id + i.size).join();
   const [lastKey, setLastKey] = useState(serverKey);
@@ -101,7 +118,11 @@ export function DashboardGrid({ items: initial }: { items: GridItem[] }) {
               {items.map((item) => (
                 <SortableWidget
                   key={item.id}
-                  item={{ ...item, node: nodeById.get(item.id) ?? item.node }}
+                  item={{
+                    ...item,
+                    node: latestById.get(item.id)?.node ?? item.node,
+                    title: latestById.get(item.id)?.title ?? item.title,
+                  }}
                   editing={editing}
                   onRemove={() =>
                     start(async () => {
@@ -131,34 +152,7 @@ export function DashboardGrid({ items: initial }: { items: GridItem[] }) {
         </div>
       )}
 
-      <Dialog
-        open={adding}
-        onClose={() => setAdding(false)}
-        title="Añadir widget"
-        description="Todos los widgets muestran tus datos reales."
-      >
-        <ul className="grid gap-2 pb-2 sm:grid-cols-2">
-          {(Object.keys(WIDGET_TYPES) as WidgetType[]).map((type) => (
-            <li key={type}>
-              <button
-                type="button"
-                onClick={() =>
-                  start(async () => {
-                    const res = await addWidget(type);
-                    if (!res.ok) return toast(res.error, "error");
-                    toast(`Añadido: ${WIDGET_TYPES[type].label}`);
-                    setAdding(false);
-                  })
-                }
-                className="flex h-full w-full flex-col items-start gap-1 rounded-2xl border border-border p-4 text-left transition-colors hover:border-border-strong hover:bg-surface-strong"
-              >
-                <span className="font-medium">{WIDGET_TYPES[type].label}</span>
-                <span className="text-[13px] text-fg-muted">{WIDGET_TYPES[type].description}</span>
-              </button>
-            </li>
-          ))}
-        </ul>
-      </Dialog>
+      <AddWidgetDialog open={adding} onClose={() => setAdding(false)} trackers={trackers} />
     </div>
   );
 }
@@ -183,7 +177,7 @@ function SortableWidget({
     transition,
     isDragging,
   } = useSortable({ id: item.id, disabled: !editing });
-  const label = WIDGET_TYPES[item.type].label;
+  const label = item.title ?? WIDGET_TYPES[item.type].label;
   return (
     <section
       ref={setNodeRef}
@@ -242,5 +236,105 @@ function SortableWidget({
       </header>
       <div className="min-w-0 flex-1">{item.node}</div>
     </section>
+  );
+}
+
+function AddWidgetDialog({
+  open,
+  onClose,
+  trackers,
+}: {
+  open: boolean;
+  onClose: () => void;
+  trackers: TrackerOption[];
+}) {
+  const [picking, setPicking] = useState<WidgetType | null>(null);
+  const [trackerId, setTrackerId] = useState("");
+  const [pending, start] = useTransition();
+  const toast = useToast();
+  const close = () => {
+    setPicking(null);
+    onClose();
+  };
+  const add = (type: WidgetType, tracker?: string) =>
+    start(async () => {
+      const res = await addWidget(type, tracker);
+      if (!res.ok) return toast(res.error, "error");
+      toast(`Añadido: ${WIDGET_TYPES[type].label}`);
+      close();
+    });
+
+  return (
+    <Dialog
+      open={open}
+      onClose={close}
+      title={picking ? WIDGET_TYPES[picking].label : "Añadir widget"}
+      description={
+        picking ? "Elige qué tracker mostrar." : "Todos los widgets muestran tus datos reales."
+      }
+    >
+      {picking ? (
+        trackers.length ? (
+          <form
+            className="flex flex-col gap-4 pb-2"
+            onSubmit={(e) => {
+              e.preventDefault();
+              add(picking, trackerId || trackers[0].id);
+            }}
+          >
+            <Select
+              label="Tracker"
+              value={trackerId || trackers[0].id}
+              onChange={(e) => setTrackerId(e.target.value)}
+            >
+              {trackers.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.icon ? `${t.icon} ` : ""}
+                  {t.name}
+                </option>
+              ))}
+            </Select>
+            <div className="flex flex-wrap gap-2">
+              <Button type="submit" disabled={pending}>
+                Añadir widget
+              </Button>
+              <Button variant="ghost" onClick={() => setPicking(null)}>
+                Volver
+              </Button>
+            </div>
+          </form>
+        ) : (
+          <div className="flex flex-col items-start gap-3 pb-2">
+            <p className="text-[14px] text-fg-muted">
+              Aún no tienes trackers en este espacio. Crea uno y vuelve para añadirlo al panel.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <Link href="/trackers" className={buttonClasses({ variant: "primary" })}>
+                Ir a Trackers
+              </Link>
+              <Button variant="ghost" onClick={() => setPicking(null)}>
+                Volver
+              </Button>
+            </div>
+          </div>
+        )
+      ) : (
+        <ul className="grid gap-2 pb-2 sm:grid-cols-2">
+          {(Object.keys(WIDGET_TYPES) as WidgetType[]).map((type) => (
+            <li key={type}>
+              <button
+                type="button"
+                disabled={pending}
+                onClick={() => (needsTracker(type) ? setPicking(type) : add(type))}
+                className="flex h-full w-full flex-col items-start gap-1 rounded-2xl border border-border p-4 text-left transition-colors hover:border-border-strong hover:bg-surface-strong"
+              >
+                <span className="font-medium">{WIDGET_TYPES[type].label}</span>
+                <span className="text-[13px] text-fg-muted">{WIDGET_TYPES[type].description}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </Dialog>
   );
 }

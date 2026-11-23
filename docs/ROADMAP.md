@@ -6,8 +6,8 @@ Leyenda: ✅ hecho · 🟡 en curso · ⬜ pendiente. La auditoría de partida e
 | ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ------ |
 | **0 · Auditoría**                         | Inspección del repo, app, BD local y producción; clasificación conservar/mejorar/reconstruir/añadir/eliminar                                              | `AUDIT.md` publicado                                                            | ✅     |
 | **1 · Fundación**                         | Next.js 16 + Supabase, auth completa, rutas protegidas, perfiles con RLS, tokens, PWA manifest, CI, producción                                            | Auth + RLS probados (pgTAP + E2E), desplegado                                   | ✅     |
-| **2 · Núcleo**                            | Workspaces, proyectos, tareas (subtareas, estados, prioridades, etiquetas), calendario, dashboard de widgets, ⌘K                                          | CRUD real con RLS por workspace, persistencia tras recargar, E2E de flujos      | 🟡     |
-| **3 · Trackers**                          | Constructor, propiedades tipadas, vistas (tabla/lista/calendario/tarjetas/kanban/gráfico), fórmulas seguras, relaciones, analítica, importación CSV/Excel | Tracker creado desde cero y plantilla; gráfica refleja datos; fórmulas probadas | ⬜     |
+| **2 · Núcleo**                            | Workspaces, proyectos, tareas (subtareas, estados, prioridades, etiquetas), calendario, dashboard de widgets, ⌘K                                          | CRUD real con RLS por workspace, persistencia tras recargar, E2E de flujos      | ✅     |
+| **3 · Trackers**                          | Constructor, propiedades tipadas, vistas (tabla/lista/calendario/tarjetas/kanban/gráfico), fórmulas seguras, relaciones, analítica, importación CSV/Excel | Tracker creado desde cero y plantilla; gráfica refleja datos; fórmulas probadas | ✅     |
 | **4 · Objetivos y hábitos**               | Objetivos con hitos y subobjetivos, progreso desde trackers/tareas, hábitos con rachas por zona horaria y frecuencia                                      | Progreso y rachas calculados en BD y probados                                   | ⬜     |
 | **5 · Módulos**                           | Salud (importación real, sin datos inventados), Contenido (pipeline), Biblioteca (editor, archivos, plantillas)                                           | CRUD + vistas + tests por módulo                                                | ⬜     |
 | **6 · IA**                                | Capa agnóstica de proveedor, chat (página, panel, ⌘K), herramientas con confirmación, memoria, límites de uso                                             | Acciones reales con confirmación; tests con proveedor simulado                  | ⬜     |
@@ -27,6 +27,16 @@ Leyenda: ✅ hecho · 🟡 en curso · ⬜ pendiente. La auditoría de partida e
 - [x] Calendario: vistas día/semana/mes/año, eventos y tareas con fecha, alta/edición, mover bloques
 - [x] Dashboard: widgets con datos reales; añadir, quitar, reordenar (drag & drop), cambiar tamaño; persistidos
 - [x] E2E de cada flujo + `expectAccessible`
+
+## Fase 3 · Trackers — desglose (detalle en `TRACKERS.md`)
+
+- [x] Modelo: `trackers`, `tracker_properties` (18 tipos), `tracker_entries` (valores JSON por id de propiedad), `tracker_entry_links`, `tracker_views` + RLS por rol + pgTAP
+- [x] Motor de fórmulas propio y acotado (sin `eval`), con alias en español
+- [x] Constructor: plantillas (8), en blanco, duplicar estructura; propiedades con validación por tipo
+- [x] Vistas guardadas: tabla, lista, tarjetas, kanban (arrastrar o selector), calendario y gráfico (estadísticas, tendencia y estimación etiquetada)
+- [x] Importación CSV/Excel con emparejado de columnas, revisión de errores y duplicados
+- [x] Widgets del panel: «Gráfico de tracker» y «Último valor»
+- [x] Unitarias, pgTAP y E2E (escritorio + móvil) con `expectAccessible` y control de desbordamiento horizontal
 
 ### Fase 2 · pendiente (se completa en fases posteriores)
 

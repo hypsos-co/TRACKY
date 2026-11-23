@@ -446,6 +446,237 @@ export type Database = {
           },
         ];
       };
+      tracker_entries: {
+        Row: {
+          created_at: string;
+          created_by: string | null;
+          id: string;
+          position: number;
+          tracker_id: string;
+          updated_at: string;
+          values: NonNullable<Json>;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          position?: number;
+          tracker_id: string;
+          updated_at?: string;
+          values?: NonNullable<Json>;
+        };
+        Update: {
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          position?: number;
+          tracker_id?: string;
+          updated_at?: string;
+          values?: NonNullable<Json>;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "tracker_entries_tracker_id_fkey";
+            columns: ["tracker_id"];
+            isOneToOne: false;
+            referencedRelation: "trackers";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      tracker_entry_links: {
+        Row: {
+          created_at: string;
+          entry_id: string;
+          property_id: string;
+          target_entry_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          entry_id: string;
+          property_id: string;
+          target_entry_id: string;
+        };
+        Update: {
+          created_at?: string;
+          entry_id?: string;
+          property_id?: string;
+          target_entry_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "tracker_entry_links_entry_id_fkey";
+            columns: ["entry_id"];
+            isOneToOne: false;
+            referencedRelation: "tracker_entries";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "tracker_entry_links_property_id_fkey";
+            columns: ["property_id"];
+            isOneToOne: false;
+            referencedRelation: "tracker_properties";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "tracker_entry_links_target_entry_id_fkey";
+            columns: ["target_entry_id"];
+            isOneToOne: false;
+            referencedRelation: "tracker_entries";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      tracker_properties: {
+        Row: {
+          config: NonNullable<Json>;
+          created_at: string;
+          id: string;
+          is_title: boolean;
+          name: string;
+          position: number;
+          required: boolean;
+          tracker_id: string;
+          type: Database["public"]["Enums"]["tracker_property_type"];
+        };
+        ComputedFields: never;
+        Insert: {
+          config?: NonNullable<Json>;
+          created_at?: string;
+          id?: string;
+          is_title?: boolean;
+          name: string;
+          position?: number;
+          required?: boolean;
+          tracker_id: string;
+          type: Database["public"]["Enums"]["tracker_property_type"];
+        };
+        Update: {
+          config?: NonNullable<Json>;
+          created_at?: string;
+          id?: string;
+          is_title?: boolean;
+          name?: string;
+          position?: number;
+          required?: boolean;
+          tracker_id?: string;
+          type?: Database["public"]["Enums"]["tracker_property_type"];
+        };
+        Relationships: [
+          {
+            foreignKeyName: "tracker_properties_tracker_id_fkey";
+            columns: ["tracker_id"];
+            isOneToOne: false;
+            referencedRelation: "trackers";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      tracker_views: {
+        Row: {
+          config: NonNullable<Json>;
+          created_at: string;
+          id: string;
+          name: string;
+          position: number;
+          tracker_id: string;
+          type: string;
+          updated_at: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          config?: NonNullable<Json>;
+          created_at?: string;
+          id?: string;
+          name: string;
+          position?: number;
+          tracker_id: string;
+          type: string;
+          updated_at?: string;
+        };
+        Update: {
+          config?: NonNullable<Json>;
+          created_at?: string;
+          id?: string;
+          name?: string;
+          position?: number;
+          tracker_id?: string;
+          type?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "tracker_views_tracker_id_fkey";
+            columns: ["tracker_id"];
+            isOneToOne: false;
+            referencedRelation: "trackers";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      trackers: {
+        Row: {
+          archived_at: string | null;
+          created_at: string;
+          created_by: string | null;
+          date_property_id: string | null;
+          description: string | null;
+          icon: string | null;
+          id: string;
+          name: string;
+          position: number;
+          template_key: string | null;
+          updated_at: string;
+          workspace_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          archived_at?: string | null;
+          created_at?: string;
+          created_by?: string | null;
+          date_property_id?: string | null;
+          description?: string | null;
+          icon?: string | null;
+          id?: string;
+          name: string;
+          position?: number;
+          template_key?: string | null;
+          updated_at?: string;
+          workspace_id: string;
+        };
+        Update: {
+          archived_at?: string | null;
+          created_at?: string;
+          created_by?: string | null;
+          date_property_id?: string | null;
+          description?: string | null;
+          icon?: string | null;
+          id?: string;
+          name?: string;
+          position?: number;
+          template_key?: string | null;
+          updated_at?: string;
+          workspace_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "trackers_date_property_fk";
+            columns: ["date_property_id"];
+            isOneToOne: false;
+            referencedRelation: "tracker_properties";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "trackers_workspace_id_fkey";
+            columns: ["workspace_id"];
+            isOneToOne: false;
+            referencedRelation: "workspaces";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       workspace_members: {
         Row: {
           created_at: string;
@@ -512,14 +743,30 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
-      can_edit_workspace: { Args: { ws: string }; Returns: boolean };
       ensure_personal_space: { Args: { uid: string }; Returns: string };
-      is_workspace_admin: { Args: { ws: string }; Returns: boolean };
-      is_workspace_member: { Args: { ws: string }; Returns: boolean };
     };
     Enums: {
       project_status: "planned" | "active" | "paused" | "completed" | "archived";
       task_status_category: "todo" | "in_progress" | "done" | "canceled";
+      tracker_property_type:
+        | "text"
+        | "long_text"
+        | "integer"
+        | "decimal"
+        | "date"
+        | "datetime"
+        | "select"
+        | "multi_select"
+        | "checkbox"
+        | "status"
+        | "percent"
+        | "currency"
+        | "formula"
+        | "relation"
+        | "url"
+        | "rating"
+        | "scale"
+        | "duration";
       workspace_role: "owner" | "admin" | "member" | "viewer";
     };
     CompositeTypes: {
@@ -641,6 +888,26 @@ export const Constants = {
     Enums: {
       project_status: ["planned", "active", "paused", "completed", "archived"],
       task_status_category: ["todo", "in_progress", "done", "canceled"],
+      tracker_property_type: [
+        "text",
+        "long_text",
+        "integer",
+        "decimal",
+        "date",
+        "datetime",
+        "select",
+        "multi_select",
+        "checkbox",
+        "status",
+        "percent",
+        "currency",
+        "formula",
+        "relation",
+        "url",
+        "rating",
+        "scale",
+        "duration",
+      ],
       workspace_role: ["owner", "admin", "member", "viewer"],
     },
   },

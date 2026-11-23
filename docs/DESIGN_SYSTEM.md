@@ -68,6 +68,9 @@ Combinaciones de relleno verificadas: blanco sobre Royal 5.2:1 · Void sobre Ne�
 | `bg-danger` + `text-danger-fg`, `text-danger-text`, `bg-danger-surface` | Destructivo / errores                            |
 | `text-success-text`, `bg-success-surface`                               | Confirmaciones                                   |
 | `outline-ring`                                                          | Anillo de foco                                   |
+| `--chart-1`, `--chart-grid` (SVG: `var(--chart-1)`)                     | Serie de gráficos y rejilla recesiva             |
+
+**Gráficos.** Una serie por gráfico (sin leyenda: el título la nombra), línea de 2 px, barras con extremo redondeado de 4 px anclado a la base, rejilla en `--chart-grid`, texto siempre en tokens de texto (nunca del color de la serie), cruceta + tooltip, flechas del teclado y «Ver como tabla». `--chart-1` es Royal `#2F5BFF` en claro y `#5C7DFF` en oscuro (validado contra cada superficie). Si algún día un gráfico necesita varias series, el orden de color se fija y se valida antes; no se generan colores sobre la marcha.
 
 Los temas se cambian con `data-theme="light|dark"` en `<html>`. Un script inline (`src/components/theme/theme-script.tsx`) aplica la preferencia guardada **antes del primer pintado** (sin parpadeo). La preferencia (Oscuro/Claro/Sistema) se guarda por dispositivo en `localStorage`.
 

@@ -5,7 +5,7 @@ import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth/session";
 import { fail, ok, type ActionResult } from "@/lib/action-result";
-import { WIDGET_SIZES, WIDGET_TYPES, isWidgetType } from "./widgets";
+import { WIDGET_SIZES, WIDGET_TYPES, isWidgetType, needsTracker } from "./widgets";
 
 const uuid = z.uuid();
 
@@ -27,12 +27,27 @@ async function ownedDashboardId(userId: string) {
   return data?.id ?? null;
 }
 
-export async function addWidget(type: string): Promise<ActionResult<{ id: string }>> {
+export async function addWidget(
+  type: string,
+  trackerId?: string,
+): Promise<ActionResult<{ id: string }>> {
   const user = await requireUser();
   if (!isWidgetType(type)) return fail("Tipo de widget no válido.");
+  const supabase = await createClient();
+  let config: { trackerId?: string } = {};
+  if (needsTracker(type)) {
+    if (!uuid.safeParse(trackerId).success) return fail("Elige un tracker.");
+    // RLS: only trackers of a workspace you belong to are visible.
+    const { data: tracker } = await supabase
+      .from("trackers")
+      .select("id")
+      .eq("id", trackerId!)
+      .maybeSingle();
+    if (!tracker) return fail("Ese tracker no existe o no tienes acceso.");
+    config = { trackerId: tracker.id };
+  }
   const dashboardId = await ownedDashboardId(user.id);
   if (!dashboardId) return fail("No se encontró tu panel.");
-  const supabase = await createClient();
   const { data, error } = await supabase
     .from("dashboard_widgets")
     .insert({
@@ -40,6 +55,7 @@ export async function addWidget(type: string): Promise<ActionResult<{ id: string
       type,
       size: WIDGET_TYPES[type].defaultSize,
       position: Date.now() / 1000,
+      config,
     })
     .select("id")
     .single();
