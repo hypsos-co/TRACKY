@@ -1,5 +1,11 @@
 import { addDays, type ISODate, isISODate, startOfWeek } from "@/lib/dates";
-import { numericValue, type EntryValues, type Property } from "./properties";
+import {
+  formatValue,
+  numericValue,
+  PROPERTY_TYPES,
+  type EntryValues,
+  type Property,
+} from "./properties";
 
 export type Aggregation = "avg" | "sum" | "min" | "max" | "last" | "count";
 export type Bucket = "day" | "week" | "month";
@@ -124,6 +130,52 @@ export function projection(points: Point[], days: number): { x: ISODate; y: numb
   if (!s || s.slopePerDay === null || points.length < 5) return null;
   const last = points[points.length - 1];
   return { x: addDays(last.x, days), y: last.y + s.slopePerDay * days };
+}
+
+// ── Chart specification (tracker chart views and dashboard widgets) ─────────
+export type ChartSpec = {
+  y: Property | null;
+  agg: Aggregation;
+  bucket: Bucket;
+  kind: "line" | "bar";
+};
+
+const AGGS = Object.keys(AGG_LABELS) as Aggregation[];
+const BUCKETS = Object.keys(BUCKET_LABELS) as Bucket[];
+
+/** Read a chart view's config defensively (unknown keys/values fall back to defaults). */
+export function chartSpec(config: Record<string, unknown>, properties: Property[]): ChartSpec {
+  const y = properties.find((p) => p.id === config.y && PROPERTY_TYPES[p.type].numeric) ?? null;
+  const agg = AGGS.includes(config.agg as Aggregation) ? (config.agg as Aggregation) : "avg";
+  const bucket = BUCKETS.includes(config.bucket as Bucket) ? (config.bucket as Bucket) : "day";
+  const kind = config.kind === "bar" || config.kind === "line" ? config.kind : y ? "line" : "bar";
+  return { y, agg: y ? agg : "count", bucket, kind };
+}
+
+/** Best chart for a tracker: its first chart view, else its first numeric property. */
+export function defaultChartSpec(tracker: {
+  properties: Property[];
+  views: { type: string; config: Record<string, unknown> }[];
+}): ChartSpec {
+  const view = tracker.views.find((v) => v.type === "chart");
+  if (view) return chartSpec(view.config, tracker.properties);
+  const y =
+    [...tracker.properties]
+      .sort((a, b) => a.position - b.position)
+      .find((p) => PROPERTY_TYPES[p.type].numeric) ?? null;
+  return { y, agg: y ? "avg" : "count", bucket: "day", kind: y ? "line" : "bar" };
+}
+
+export function chartTitle(spec: ChartSpec) {
+  return `${spec.y ? spec.y.name : "Registros"} · ${AGG_LABELS[spec.agg]} por ${BUCKET_LABELS[spec.bucket].toLowerCase()}`;
+}
+
+/** Formatter for axis ticks, tooltips and stats of a chart. */
+export function chartFormatter(spec: ChartSpec): (v: number) => string {
+  const plain = new Intl.NumberFormat("es-ES", { maximumFractionDigits: 2 });
+  const y = spec.y;
+  if (!y || spec.agg === "count") return (v) => plain.format(v);
+  return (v) => formatValue(y, Math.round(v * 100) / 100) || plain.format(v);
 }
 
 // ── Filtering & sorting for table/list/cards views ──────────────────────────

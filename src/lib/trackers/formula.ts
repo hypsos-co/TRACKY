@@ -438,7 +438,10 @@ export function checkFormula(src: string, propertyNames: string[]): string | nul
       if (n.k === "prop" && !propertyNames.some((p) => p.toLowerCase() === n.name.toLowerCase()))
         missing.push(n.name);
       if (n.k === "un") walk(n.a);
-      if (n.k === "bin") (walk(n.a), walk(n.b));
+      if (n.k === "bin") {
+        walk(n.a);
+        walk(n.b);
+      }
       if (n.k === "call") n.args.forEach(walk);
     };
     walk(ast);
