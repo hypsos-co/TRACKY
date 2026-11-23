@@ -25,18 +25,24 @@ Los E2E usan un **build de producción** (`next start` en el puerto 3100) contra
 
 ## 3. Cobertura actual (Fase 1)
 
-### Unitarias (63)
+### Unitarias (76)
+
+- `phase2-logic.test.ts` — fechas por zona horaria y DST, cuadrícula mensual, etiquetas relativas, parser de alta rápida en español, agrupación y progreso de tareas.
 
 - `routes.test.ts` — rutas públicas/protegidas (default-deny), páginas solo-invitado, **`safeNextPath` contra open redirects** (`//evil`, `https://`, `/\`, `javascript:`, caracteres de control).
 - `schemas.test.ts` — validación de login, registro (reglas de contraseña, confirmación, longitud de nombre), recuperación, perfil (zona horaria IANA), lectura de `FormData`.
 - `errors-env.test.ts` — mapeo de códigos de Supabase a mensajes sin filtrar existencia de cuentas; configuración de entorno (publishable > anon).
 - `components.test.tsx` — `Field` (aria-invalid/aria-describedby), `PasswordField` (toggle accesible), logo (nombres accesibles), `Alert` (roles), `buttonClasses`, iniciales.
 
-### Base de datos — pgTAP (17)
+### Base de datos — pgTAP (49)
+
+`core.test.sql` (32): workspace personal y seeding, aislamiento de proyectos/tareas/eventos/dashboards entre usuarios, rol viewer solo lectura, integridad entre workspaces, `completed_at`, anon sin acceso.
 
 `profiles.test.sql`: RLS activado · trigger crea perfil (con/sin nombre) · `anon` sin acceso · un usuario solo ve/edita su perfil · no puede editar el de otro · no puede insertar ni borrar · no puede tocar `id`/`created_at` · constraints (`display_name` ≤ 80, `avatar_url` https) · aislamiento verificado como superusuario · borrado en cascada.
 
-### E2E (13 escenarios × 2 dispositivos = 26)
+### E2E (19 escenarios × 2 dispositivos = 37 + 1 omitido)
+
+- `core.spec.ts`: tareas (lenguaje natural, subtareas, completar, persistencia), proyectos (progreso calculado), calendario (crear y **arrastrar** evento; vistas día/mes/año), dashboard (widgets reales, añadir y persistir), ⌘K (buscar y crear), workspaces (crear, cambiar, aislamiento). Todos con `expectAccessible`.
 
 - Landing, login y registro: contenido + **axe WCAG 2.1 A/AA sin violaciones serias/críticas**.
 - Validación de servidor en registro (mensajes, `aria-invalid`, conserva lo escrito).
@@ -52,7 +58,7 @@ Los E2E usan un **build de producción** (`next start` en el puerto 3100) contra
 
 - [x] Registrarse e iniciar sesión
 - [x] Cerrar sesión y no poder volver a páginas privadas
-- [ ] Crear / editar / eliminar una tarea y verla en el dashboard (Fase 2)
+- [x] Crear / editar / completar una tarea y verla en el dashboard
 - [ ] Crear un tracker, añadir un dato y ver la gráfica actualizada (Fase 3)
 - [ ] Completar un objetivo y ver el progreso actualizado (Fase 4)
 - [ ] Sincronizar un evento de Google Calendar (Fase 7)

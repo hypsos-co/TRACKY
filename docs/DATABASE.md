@@ -38,6 +38,23 @@ create policy "profiles: owner can update"
 
 Cobertura: `supabase/tests/database/profiles.test.sql` (17 aserciones pgTAP: trigger, aislamiento entre usuarios, anon sin acceso, columnas gestionadas, constraints, cascada).
 
+### Fase 2 · Núcleo (`20261123090000_core_workspaces_tasks_calendar.sql`)
+
+| Tabla                             | Propósito                                                                                                       | Acceso (RLS)                                                                         |
+| --------------------------------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| `workspaces`                      | Espacios de trabajo; uno personal por usuario (trigger + backfill)                                              | Miembros leen; crear solo no-personales; admins renombran; owner borra no-personales |
+| `workspace_members`               | Membresía con rol `owner/admin/member/viewer`                                                                   | Miembros leen (invitaciones: fase de equipos)                                        |
+| `projects`                        | Proyectos con estado, prioridad y fechas                                                                        | Miembros leen; `owner/admin/member` escriben                                         |
+| `task_statuses`                   | Estados configurables por workspace con categoría `todo/in_progress/done/canceled` (4 por defecto)              | Miembros leen; admins escriben                                                       |
+| `tasks`                           | Tareas y subtareas (`parent_id`), prioridad 0–4, `due_date` + `due_time`, `completed_at` gestionado por trigger | Miembros leen; editores escriben                                                     |
+| `tags`, `task_tags`               | Etiquetas por workspace (únicas sin mayúsculas)                                                                 | Igual que tareas                                                                     |
+| `events`                          | Eventos del calendario (`timestamptz`, `all_day`, `kind event/time_block`)                                      | Igual que tareas                                                                     |
+| `dashboards`, `dashboard_widgets` | Panel por usuario; widgets con tipo, tamaño, posición y `config` JSON acotado                                   | Solo el propietario                                                                  |
+
+Integridad: el trigger `tasks_before_write` impide referenciar proyectos, estados o tareas padre de otro workspace y mantiene `completed_at`; `task_tags_same_workspace` hace lo mismo con etiquetas. Las funciones `is_workspace_member`, `can_edit_workspace` e `is_workspace_admin` (security definer, stable) centralizan los permisos.
+
+Cobertura: `supabase/tests/database/core.test.sql` (32 aserciones: seeding, aislamiento entre dos usuarios, rol viewer solo lectura, integridad entre workspaces, anon sin acceso).
+
 ## 3. Modelo planificado (fases siguientes)
 
 | Tabla                                            | Campos esenciales                                                                                         | Fase  |

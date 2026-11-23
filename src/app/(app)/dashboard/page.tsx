@@ -1,24 +1,38 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Suspense } from "react";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { getContext } from "@/lib/workspace";
+import { getDefaultDashboard } from "@/lib/dashboard/data";
+import { listTasks } from "@/lib/tasks/data";
+import { listProjects } from "@/lib/projects/data";
+import { listCalendar } from "@/lib/calendar/data";
+import { addDays, capitalize, formatDay, monthGrid } from "@/lib/dates";
 import { Alert } from "@/components/ui/alert";
-import { Card } from "@/components/ui/card";
-import { getProfile } from "@/lib/auth/session";
-import { ROUTES } from "@/lib/routes";
+import { DashboardGrid, type GridItem } from "@/components/dashboard/dashboard-grid";
+import {
+  CalendarMonthWidget,
+  ProjectsWidget,
+  QuickCaptureWidget,
+  TaskStatsWidget,
+  TasksTodayWidget,
+  UpcomingEventsWidget,
+} from "@/components/dashboard/widgets";
+import { GridSkeleton } from "@/components/app/skeletons";
 
 export const metadata: Metadata = { title: "Inicio" };
 
 export default function DashboardPage({ searchParams }: PageProps<"/dashboard">) {
   return (
-    <Suspense fallback={<DashboardSkeleton />}>
+    <Suspense
+      fallback={
+        <div className="flex flex-col gap-8">
+          <div className="h-16 w-64 rounded-xl bg-surface" />
+          <GridSkeleton />
+        </div>
+      }
+    >
       <Dashboard searchParams={searchParams} />
     </Suspense>
   );
-}
-
-function formatDate(date: Date, timeZone: string, options: Intl.DateTimeFormatOptions) {
-  return new Intl.DateTimeFormat("es-ES", { timeZone, ...options }).format(date);
 }
 
 async function Dashboard({
@@ -26,89 +40,50 @@ async function Dashboard({
 }: {
   searchParams: PageProps<"/dashboard">["searchParams"];
 }) {
-  const [{ user, profile }, params] = await Promise.all([getProfile(), searchParams]);
+  const [ctx, params] = await Promise.all([getContext(), searchParams]);
+  const { user, profile, workspace, today, timeZone } = ctx;
+  const grid = monthGrid(today);
+  const [dashboard, tasks, projects, week, month] = await Promise.all([
+    getDefaultDashboard(user.id),
+    listTasks(workspace.id),
+    listProjects(workspace.id),
+    listCalendar(workspace.id, today, addDays(today, 7), timeZone),
+    listCalendar(workspace.id, grid[0], grid[41], timeZone),
+  ]);
+
+  const render = (type: GridItem["type"]) => {
+    switch (type) {
+      case "quick_capture":
+        return <QuickCaptureWidget />;
+      case "tasks_today":
+        return <TasksTodayWidget tasks={tasks} today={today} />;
+      case "upcoming_events":
+        return <UpcomingEventsWidget events={week.events} today={today} timeZone={timeZone} />;
+      case "task_stats":
+        return <TaskStatsWidget tasks={tasks} today={today} timeZone={timeZone} />;
+      case "projects":
+        return <ProjectsWidget projects={projects} />;
+      case "calendar_month":
+        return <CalendarMonthWidget today={today} events={month.events} tasks={month.tasks} />;
+    }
+  };
+
+  const items: GridItem[] = (dashboard?.widgets ?? []).map((w) => ({ ...w, node: render(w.type) }));
   const name = profile.display_name ?? user.email.split("@")[0];
-  const todayRaw = formatDate(new Date(), profile.timezone, {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-  });
-  const today = todayRaw.charAt(0).toUpperCase() + todayRaw.slice(1);
-  const memberSince = formatDate(new Date(profile.created_at), profile.timezone, {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-6">
       {params.password === "updated" ? <Alert tone="success">Contraseña actualizada.</Alert> : null}
-
       <header className="animate-rise">
-        <p className="text-[14px] font-medium text-fg-subtle">{today}</p>
+        <p className="text-[14px] font-medium text-fg-subtle">
+          {capitalize(formatDay(today, { weekday: "long", day: "numeric", month: "long" }))} ·{" "}
+          {workspace.name}
+        </p>
         <h1 className="mt-1 text-[34px] leading-tight font-medium tracking-[-0.03em] text-balance sm:text-[44px]">
           Hola, {name}
         </h1>
       </header>
-
-      <div className="grid gap-4 md:grid-cols-5">
-        <Card className="animate-rise p-6 [animation-delay:80ms] md:col-span-3">
-          <div className="flex items-center gap-2 text-[13px] font-medium text-success-text">
-            <Sparkles className="size-4" aria-hidden />
-            Fase 1 · Fundación
-          </div>
-          <h2 className="mt-3 text-[22px] font-medium tracking-[-0.02em]">Tu espacio está listo</h2>
-          <p className="mt-2 text-[15px] leading-relaxed text-fg-muted">
-            Tu cuenta, tu perfil y la seguridad de tus datos ya funcionan. Las tareas, los trackers
-            y los widgets de este panel llegan en la Fase 2.
-          </p>
-          <Link
-            href={ROUTES.settings}
-            className="group mt-5 inline-flex items-center gap-1.5 text-[14px] font-medium text-primary-text"
-          >
-            Personaliza tu perfil
-            <ArrowRight
-              className="size-4 transition-transform group-hover:translate-x-0.5"
-              aria-hidden
-            />
-          </Link>
-        </Card>
-
-        <Card className="animate-rise p-6 [animation-delay:160ms] md:col-span-2">
-          <h2 className="text-[13px] font-medium tracking-[0.08em] text-fg-subtle uppercase">
-            Tu cuenta
-          </h2>
-          <dl className="mt-4 flex flex-col gap-3 text-[14px]">
-            <Row term="Email" value={user.email} />
-            <Row term="Zona horaria" value={profile.timezone} />
-            <Row term="Miembro desde" value={memberSince} />
-          </dl>
-        </Card>
-      </div>
-    </div>
-  );
-}
-
-function Row({ term, value }: { term: string; value: string }) {
-  return (
-    <div className="flex items-baseline justify-between gap-4 border-b border-border pb-3 last:border-0 last:pb-0">
-      <dt className="text-fg-muted">{term}</dt>
-      <dd className="min-w-0 truncate text-right font-medium">{value}</dd>
-    </div>
-  );
-}
-
-function DashboardSkeleton() {
-  return (
-    <div className="flex flex-col gap-8" aria-busy="true" aria-label="Cargando">
-      <div className="flex flex-col gap-3">
-        <div className="h-4 w-40 rounded bg-surface-strong" />
-        <div className="h-10 w-64 rounded-lg bg-surface-strong" />
-      </div>
-      <div className="grid gap-4 md:grid-cols-5">
-        <div className="glass h-48 rounded-[var(--radius-card)] md:col-span-3" />
-        <div className="glass h-48 rounded-[var(--radius-card)] md:col-span-2" />
-      </div>
+      <DashboardGrid items={items} />
     </div>
   );
 }

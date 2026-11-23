@@ -15,6 +15,9 @@ const MESSAGES: Record<string, string> = {
     "Hemos enviado demasiados emails. Inténtalo de nuevo en unos minutos.",
   email_address_invalid: "Ese email no es válido.",
   signup_disabled: "El registro está desactivado temporalmente.",
+  // Supabase's built-in mailer (free tier) only delivers to the project team's addresses.
+  email_address_not_authorized:
+    "Ahora mismo el registro solo está disponible para emails autorizados. Inténtalo con otro email.",
   session_not_found: "Tu sesión ha caducado. Vuelve a iniciar sesión.",
   otp_expired: "El enlace ha caducado. Solicita uno nuevo.",
   flow_state_expired: "El enlace ha caducado. Solicita uno nuevo.",

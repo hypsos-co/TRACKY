@@ -1,4 +1,4 @@
-import { LayoutGrid, Settings } from "lucide-react";
+import { CalendarDays, CheckSquare, FolderKanban, LayoutGrid, Settings } from "lucide-react";
 import { ROUTES } from "@/lib/routes";
 
 /**
@@ -7,5 +7,8 @@ import { ROUTES } from "@/lib/routes";
  */
 export const NAV_ITEMS = [
   { href: ROUTES.dashboard, label: "Inicio", Icon: LayoutGrid },
+  { href: ROUTES.tasks, label: "Tareas", Icon: CheckSquare },
+  { href: ROUTES.calendar, label: "Calendario", Icon: CalendarDays },
+  { href: ROUTES.projects, label: "Proyectos", Icon: FolderKanban },
   { href: ROUTES.settings, label: "Ajustes", Icon: Settings },
 ] as const;

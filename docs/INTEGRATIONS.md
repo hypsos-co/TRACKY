@@ -32,4 +32,4 @@
 
 ## 4. Configuración de credenciales (cuando llegue la fase)
 
-Las claves de proveedores se guardan como secretos de Supabase (`supabase secrets set GOOGLE_CLIENT_SECRET=…`) y, si las necesita Next.js en el servidor, en Vercel (sin prefijo `NEXT_PUBLIC_`). Nunca en el repositorio.
+Las claves de proveedores se guardan como secretos de Supabase (`supabase secrets set GOOGLE_CLIENT_SECRET=…`) y, si las necesita Next.js en el servidor, en Netlify (sin prefijo `NEXT_PUBLIC_`). Nunca en el repositorio.

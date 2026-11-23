@@ -13,7 +13,7 @@ Plan completo en [`docs/ROADMAP.md`](docs/ROADMAP.md).
 
 ## Stack
 
-Next.js 16 (App Router, Cache Components) · React 19 · TypeScript · Tailwind CSS v4 · Supabase (Postgres + RLS, Auth) · Vitest · Playwright + axe · pgTAP · GitHub Actions · Vercel.
+Next.js 16 (App Router, Cache Components) · React 19 · TypeScript · Tailwind CSS v4 · Supabase (Postgres + RLS, Auth) · Vitest · Playwright + axe · pgTAP · GitHub Actions · Netlify.
 
 ## Puesta en marcha local
 
@@ -45,8 +45,10 @@ En local la confirmación de email está desactivada: al registrarte entras dire
 
 ## Despliegue
 
-1. **Supabase Cloud:** crea el proyecto (plan gratuito) y configura las URLs de redirección (`https://<dominio>/auth/callback`).
-2. **Vercel:** importa el repositorio y añade `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` y `NEXT_PUBLIC_SITE_URL`. Cada PR genera un preview.
+**Producción:** https://tracky-7suj.netlify.app — Netlify publica automáticamente cada cambio en `main`; cada PR tiene su vista previa.
+
+1. **Supabase Cloud:** proyecto "TRACKY APP" (plan gratuito) con las URLs de redirección `https://tracky-7suj.netlify.app/auth/callback` y `https://*--tracky-7suj.netlify.app/auth/callback`.
+2. **Netlify:** variables `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` y `NEXT_PUBLIC_SITE_URL` configuradas en el proyecto `tracky-7suj`.
 3. **Migraciones:** añade los secretos de GitHub y lanza el workflow manual _Deploy database migrations_:
    ```bash
    gh secret set SUPABASE_ACCESS_TOKEN

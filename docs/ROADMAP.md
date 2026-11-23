@@ -1,38 +1,46 @@
 # TRACKY · Roadmap
 
-Leyenda: ✅ hecho · 🟡 en curso · ⬜ pendiente
+Leyenda: ✅ hecho · 🟡 en curso · ⬜ pendiente. La auditoría de partida está en `AUDIT.md`.
 
-| Fase                       | Alcance                                                                                                                                                  | Entregables                                                   | Criterios de aceptación                                            | Estado |
-| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------------ | ------ |
-| **1 · Fundación**          | Next.js 16 + Supabase, Auth (registro/login/logout/recuperación), rutas protegidas, perfil con RLS, design system con identidad TRACKY, PWA manifest, CI | App funcional local, migración `profiles`, docs, CI           | Auth + RLS probados (pgTAP + E2E), build sin secretos, tests pasan | ✅     |
-| **2 · Núcleo**             | Dashboard con widgets, proyectos/espacios, CRUD de tareas y trackers básicos, búsqueda global                                                            | Tablas `projects`, `tasks`, `trackers`, `tracker_entries`; UI | CRUD real con RLS, E2E de crear/editar/borrar                      | ⬜     |
-| **3 · Trackers avanzados** | Propiedades múltiples y fórmulas, vistas tabla/gráfica, plantillas, importación CSV                                                                      | Motor de propiedades, gráficas, importador                    | Gráfica refleja los datos guardados; tests de fórmulas             | ⬜     |
-| **4 · Productividad**      | Objetivos con hitos y progreso automático, hábitos con rachas, rutinas, calendario, notificaciones básicas                                               | `goals`, `habits`, `habit_logs`, vistas de progreso           | Progreso y rachas calculados en BD y probados                      | ⬜     |
-| **5 · Módulos**            | Salud (importación), Contenido, Biblioteca, Finanzas, Aprendizaje, Viajes, Relaciones                                                                    | Un módulo por PR, cada uno con tablas + RLS + UI              | CRUD persistente y tests por módulo                                | ⬜     |
-| **6 · IA**                 | Chat global, memoria, herramientas (crear tarea/tracker) con confirmación, resúmenes, búsqueda semántica                                                 | `AI_SYSTEM.md` implementado                                   | Acciones piden confirmación; tests con proveedor simulado          | ⬜     |
-| **7 · Integraciones**      | Google Calendar, importación Apple Health, Drive/Dropbox, Notion, redes sociales                                                                         | Conectores OAuth con tokens en Vault                          | Sync de calendario funcionando; resolución de conflictos           | ⬜     |
-| **8 · Offline**            | Service Worker, IndexedDB, cola de sync, conflictos; rendimiento                                                                                         | SW + almacenamiento local                                     | Crear tarea offline y sincronizar al reconectar (E2E)              | ⬜     |
-| **9 · QA y lanzamiento**   | CSP con nonce, MFA UI, exportación/borrado de datos, backups, auditoría, Lighthouse, accesibilidad manual                                                | Checklist final                                               | Todos los tests, OWASP Top 10, a11y manual                         | ⬜     |
+| Fase                                      | Alcance                                                                                                                                                   | Criterio de "terminado"                                                         | Estado |
+| ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ------ |
+| **0 · Auditoría**                         | Inspección del repo, app, BD local y producción; clasificación conservar/mejorar/reconstruir/añadir/eliminar                                              | `AUDIT.md` publicado                                                            | ✅     |
+| **1 · Fundación**                         | Next.js 16 + Supabase, auth completa, rutas protegidas, perfiles con RLS, tokens, PWA manifest, CI, producción                                            | Auth + RLS probados (pgTAP + E2E), desplegado                                   | ✅     |
+| **2 · Núcleo**                            | Workspaces, proyectos, tareas (subtareas, estados, prioridades, etiquetas), calendario, dashboard de widgets, ⌘K                                          | CRUD real con RLS por workspace, persistencia tras recargar, E2E de flujos      | 🟡     |
+| **3 · Trackers**                          | Constructor, propiedades tipadas, vistas (tabla/lista/calendario/tarjetas/kanban/gráfico), fórmulas seguras, relaciones, analítica, importación CSV/Excel | Tracker creado desde cero y plantilla; gráfica refleja datos; fórmulas probadas | ⬜     |
+| **4 · Objetivos y hábitos**               | Objetivos con hitos y subobjetivos, progreso desde trackers/tareas, hábitos con rachas por zona horaria y frecuencia                                      | Progreso y rachas calculados en BD y probados                                   | ⬜     |
+| **5 · Módulos**                           | Salud (importación real, sin datos inventados), Contenido (pipeline), Biblioteca (editor, archivos, plantillas)                                           | CRUD + vistas + tests por módulo                                                | ⬜     |
+| **6 · IA**                                | Capa agnóstica de proveedor, chat (página, panel, ⌘K), herramientas con confirmación, memoria, límites de uso                                             | Acciones reales con confirmación; tests con proveedor simulado                  | ⬜     |
+| **7 · Automatizaciones y notificaciones** | Reglas SI→ENTONCES en backend, cron, historial, reintentos, centro de notificaciones, Web Push, email                                                     | Regla ejecutada en backend con la app cerrada; push donde haya soporte          | ⬜     |
+| **8 · Integraciones**                     | Calendarios, Notion, Drive/Dropbox, redes sociales, Apple Health vía importación/puente nativo                                                            | Integración real con OAuth y conflictos resueltos                               | ⬜     |
+| **9 · Offline y PWA**                     | Service Worker, IndexedDB, cola de sincronización, conflictos, rendimiento                                                                                | Crear tarea offline y sincronizar al reconectar (E2E)                           | ⬜     |
+| **10 · QA y producción**                  | CSP con nonce, MFA en UI, exportación y borrado de cuenta, auditoría, rate limiting, Lighthouse, a11y manual                                              | Checklist de aceptación completa                                                | ⬜     |
+| **Marca**                                 | Aplicar la identidad visual definitiva cuando se entregue                                                                                                 | Solo cambian tokens y activos de marca                                          | ⬜     |
 
-> El orden del MASTER_PROMPT original situaba Integraciones (6) antes que IA (7); este roadmap mantiene IA en 6 como en la tabla del PRD original. Cualquiera de los dos órdenes funciona: decide al llegar a la Fase 5.
+## Fase 2 · Núcleo — desglose
 
-## Fase 1 · Detalle de lo entregado
+- [x] Modelo de datos: `workspaces`, `workspace_members`, `projects`, `task_statuses`, `tasks` (subtareas), `tags`, `task_tags`, `events`, `dashboards`, `dashboard_widgets` + RLS por membresía + pgTAP
+- [x] Backfill del workspace personal para usuarios existentes (producción tiene 1 usuario real)
+- [x] Shell: selector de workspace, navegación por módulos, paleta ⌘K (buscar + crear), diálogos y toasts
+- [x] Tareas: lista por secciones (Hoy, Próximas, Sin fecha, Hechas), alta rápida, detalle editable, subtareas, prioridades, estados, etiquetas, filtros
+- [x] Proyectos: listado, alta/edición, detalle con tareas y progreso calculado
+- [x] Calendario: vistas día/semana/mes/año, eventos y tareas con fecha, alta/edición, mover bloques
+- [x] Dashboard: widgets con datos reales; añadir, quitar, reordenar (drag & drop), cambiar tamaño; persistidos
+- [x] E2E de cada flujo + `expectAccessible`
 
-- [x] Repositorio Next.js 16.4 (App Router, TS estricto, Tailwind v4, Cache Components)
-- [x] Clientes Supabase (navegador, servidor, proxy) con `@supabase/ssr` y clave publishable
-- [x] `src/proxy.ts`: refresco de sesión + default-deny de rutas
-- [x] Registro, login, logout (recarga completa), recuperar/actualizar contraseña, callback de email (PKCE y token_hash), página de error
-- [x] Migración `profiles` + trigger de alta + RLS + privilegios por columna
-- [x] Ajustes: perfil (nombre, zona horaria), tema, cambio de contraseña, cerrar sesión
-- [x] Design system: paleta fusionada con contrastes AA, SF Pro vía sistema + Inter, logo vectorizado, wordmark Baby Shower en contornos, vidrio líquido, animaciones
-- [x] PWA: manifest, iconos (incl. maskable y Apple)
-- [x] Tests: 63 unitarios (Vitest), 17 pgTAP, 26 E2E (escritorio + móvil, axe WCAG 2.1 AA)
-- [x] CI (GitHub Actions), workflow manual de migraciones, Dependabot, cabeceras de seguridad
-- [x] Documentación completa en `docs/`
+### Fase 2 · pendiente (se completa en fases posteriores)
 
-### Pendiente de Fase 1 que requiere al propietario
+- Eventos recurrentes y repeticiones de tareas (RRULE) → Fase 4 junto a rutinas.
+- Recordatorios → Fase 7 (notificaciones).
+- Dependencias entre tareas, adjuntos y registro de actividad → Fase 4/5.
+- Dashboards múltiples y por workspace (el modelo ya lo soporta; falta la UI).
+- Estados de tarea editables desde la UI (la tabla ya es configurable).
 
-- [ ] Crear el proyecto Supabase Cloud y compartir URL + clave publishable (o configurarlas directamente en Vercel)
-- [ ] Conectar el repositorio a Vercel
-- [ ] Confirmar licencias tipográficas (ver `DESIGN_SYSTEM.md` §3)
-- [ ] Rama `main` protegida en GitHub
+## Pendiente del propietario
+
+- [ ] Autorizar migraciones + despliegue de cada fase en producción
+- [ ] Cambiar la rama por defecto de GitHub a `main` y protegerla
+- [ ] Autorizar el cierre de los PRs antiguos de Dependabot (#1–#7)
+- [ ] SMTP propio para emails (antes de abrir el registro)
+- [ ] Clave de proveedor de IA (Fase 6)
+- [ ] Identidad visual definitiva

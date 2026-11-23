@@ -25,12 +25,12 @@ El usuario puede:
 | Módulo                              | Requisitos clave                                                                                                                                                               | Fase                            |
 | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------- |
 | **Cuenta**                          | Registro, login, logout, recuperar contraseña, perfil (nombre, zona horaria), tema claro/oscuro/sistema. MFA TOTP opcional                                                     | **1 ✅** (MFA UI: 9)            |
-| **Dashboard**                       | Widgets configurables y reordenables (drag & drop), métricas clave, tareas del día, recordatorios                                                                              | 2                               |
-| **Navegación y búsqueda**           | Sidebar (escritorio) / tab bar (móvil); búsqueda global (texto completo; semántica en Fase 6)                                                                                  | 1 ✅ / 2                        |
+| **Dashboard** ✅                    | Widgets configurables y reordenables (drag & drop), métricas clave, tareas del día, recordatorios                                                                              | 2                               |
+| **Navegación y búsqueda** ✅        | Sidebar (escritorio) / tab bar (móvil); búsqueda global (texto completo; semántica en Fase 6)                                                                                  | 1 ✅ / 2                        |
 | **Trackers**                        | Propiedades: número, porcentaje, booleano, fecha, texto, selección/etiquetas, relación, fórmula. Vistas: tabla, lista, gráfica. Plantillas (p. ej. "Peso"). Importar CSV/Excel | 2–3                             |
 | **Objetivos**                       | Metas cuantitativas ligadas a un tracker ("llegar a 75 kg"), hitos, progreso automático, fecha objetivo                                                                        | 4                               |
-| **Tareas y proyectos**              | Subtareas, prioridad, dependencias, proyectos, estados, fechas límite, integración con calendario                                                                              | 2 / 4                           |
-| **Calendario**                      | Vista mes/semana, time-blocking, sync bidireccional Google/Apple                                                                                                               | 4 / 7                           |
+| **Tareas y proyectos** ✅           | Subtareas, prioridad, dependencias, proyectos, estados, fechas límite, integración con calendario                                                                              | 2 / 4                           |
+| **Calendario** ✅                   | Vista mes/semana, time-blocking, sync bidireccional Google/Apple                                                                                                               | 4 / 7                           |
 | **Hábitos y rutinas**               | Seguimiento diario, rachas, rutinas programadas, detección de incumplimientos                                                                                                  | 4                               |
 | **Salud**                           | Importación (JSON/CSV/export de Apple Health), luego HealthKit/Google Fit/Strava. Peso, grasa, pasos, ejercicio, sueño, calorías. Tendencias y alertas                         | 5 / 7                           |
 | **Contenido**                       | Ideas, pipeline (escribir → grabar → editar → publicar), calendario editorial, métricas post-publicación                                                                       | 5                               |
@@ -53,7 +53,7 @@ Todos los módulos se pueden **activar/desactivar** y personalizar.
 - **Accesibilidad:** WCAG 2.1 AA (verificado con axe en E2E y revisión manual).
 - **Rendimiento:** shell estático instantáneo; contenido del usuario en streaming; Lighthouse ≥ 90 en Performance/Accessibility/Best Practices.
 - **Seguridad:** RLS en todas las tablas, secretos fuera del código, OWASP Top 10 (ver `ARCHITECTURE.md` §5).
-- **Coste:** 0–10 €/mes (niveles gratuitos de Vercel y Supabase; IA con presupuesto limitado).
+- **Coste:** 0–10 €/mes (niveles gratuitos de Netlify y Supabase; IA con presupuesto limitado).
 - **Idioma:** español primero; textos centralizables para i18n posterior.
 
 ## 5. Criterios de aceptación (todas las fases)

@@ -13,7 +13,7 @@ docs/DESIGN_SYSTEM.md, docs/ROADMAP.md, docs/TESTING.md y CLAUDE.md.
 1. Fase 1 — Fundación  ✅ COMPLETADA
    Next.js 16 + Supabase (@supabase/ssr), auth completa con Server Actions, src/proxy.ts
    (refresco de sesión + default-deny), tabla profiles con RLS, design system TRACKY,
-   PWA manifest, CI, docs. Pendiente del propietario: proyecto Supabase Cloud + Vercel.
+   PWA manifest, CI, docs. Desplegada en Netlify (https://tracky-7suj.netlify.app) con Supabase Cloud "TRACKY APP".
 
 2. Fase 2 — Navegación, Dashboard y núcleo
    - Añade módulos a la navegación SOLO cuando existan (src/components/app/nav-items.ts).
@@ -59,7 +59,7 @@ docs/DESIGN_SYSTEM.md, docs/ROADMAP.md, docs/TESTING.md y CLAUDE.md.
 
 Reglas (resumen; detalle en CLAUDE.md):
 - Nada de funcionalidades ficticias ni elementos sin backend.
-- Nunca expongas claves en el frontend; secretos en Vercel/GitHub/Supabase.
+- Nunca expongas claves en el frontend; secretos en Netlify/GitHub/Supabase.
 - Confirmación explícita antes de acciones destructivas (borrados, migraciones de datos,
   despliegues de esquema a producción).
 - Identidad visual: usa SOLO los tokens de DESIGN_SYSTEM.md; no inventes colores ni fuentes.
