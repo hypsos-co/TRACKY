@@ -5,7 +5,7 @@ import { formatDay } from "@/lib/dates";
 import type { Point } from "@/lib/trackers/analytics";
 import { cn } from "@/lib/utils";
 
-const H = 240;
+const H = 300;
 const M = { top: 14, right: 14, bottom: 28, left: 52 };
 
 function niceTicks(min: number, max: number, count = 4) {
@@ -76,7 +76,7 @@ export function TrackerChart({
 
   if (!points.length)
     return (
-      <p className="rounded-2xl border border-dashed border-border-strong p-6 text-center text-[14px] text-fg-muted">
+      <p className="rounded-[var(--radius-field)] border border-dashed border-border-strong p-6 text-center text-[14px] text-fg-muted">
         Aún no hay datos numéricos para dibujar este gráfico.
       </p>
     );
@@ -223,13 +223,22 @@ export function TrackerChart({
                     strokeLinejoin="round"
                     strokeLinecap="round"
                   />
+                  {/* Signature: the lime "now" dot marks the latest record. */}
+                  <circle
+                    cx={sx(last)}
+                    cy={sy(points[last].y)}
+                    r={5}
+                    fill="var(--dot)"
+                    stroke="var(--card)"
+                    strokeWidth={2}
+                  />
                   <circle
                     cx={sx(last)}
                     cy={sy(points[last].y)}
                     r={4}
-                    fill="var(--chart-1)"
-                    stroke="var(--surface-solid)"
-                    strokeWidth={2}
+                    fill="none"
+                    stroke="var(--dot-ring)"
+                    strokeWidth={1}
                   />
                 </>
               )}
@@ -251,7 +260,7 @@ export function TrackerChart({
                       cy={sy(points[a].y)}
                       r={5}
                       fill="var(--chart-1)"
-                      stroke="var(--surface-solid)"
+                      stroke="var(--card)"
                       strokeWidth={2}
                     />
                   ) : null}
@@ -263,10 +272,10 @@ export function TrackerChart({
           {a !== null ? (
             <div
               role="status"
-              className="glass-strong pointer-events-none absolute top-1 z-10 rounded-xl bg-[var(--surface-solid)] px-3 py-2 text-[12px] whitespace-nowrap"
+              className="panel-float pointer-events-none absolute top-1 z-10 rounded-xl bg-[var(--surface-solid)] px-3 py-2 text-[12px] whitespace-nowrap"
               style={{ left: Math.min(Math.max(sx(a) - 60, 0), width - 140) }}
             >
-              <span className="block text-[15px] font-semibold tabular-nums">
+              <span className="block text-[15px] font-medium tabular-nums">
                 {format(points[a].y)}
               </span>
               <span className="text-fg-muted">

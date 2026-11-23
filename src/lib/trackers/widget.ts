@@ -11,7 +11,12 @@ export type TrackerWidgetData = {
   /** Chart points (last 60 buckets). */
   points: Point[];
   /** Last recorded value per day of the main numeric property. */
-  latest: { value: number; day: ISODate; previous: number | null } | null;
+  latest: {
+    value: number;
+    day: ISODate;
+    previous: number | null;
+    previousDay: ISODate | null;
+  } | null;
   lastEntry: { title: string; day: ISODate | null } | null;
   entries: number;
 };
@@ -52,7 +57,14 @@ export function buildTrackerWidget(tracker: TrackerInput, today: string): Tracke
     icon: tracker.icon,
     spec,
     points,
-    latest: last ? { value: last.y, day: last.x, previous: daily.at(-2)?.y ?? null } : null,
+    latest: last
+      ? {
+          value: last.y,
+          day: last.x,
+          previous: daily.at(-2)?.y ?? null,
+          previousDay: daily.at(-2)?.x ?? null,
+        }
+      : null,
     lastEntry: newest
       ? {
           title: titleProp ? formatValue(titleProp, newest.values[titleProp.id]) : "",

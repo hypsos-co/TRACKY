@@ -64,19 +64,19 @@ export function CompleteButton({
         onToggle(!done);
       }}
       className={cn(
-        "grid size-[22px] shrink-0 place-items-center rounded-full border-[1.5px] transition-[background-color,border-color,transform] duration-200 active:scale-90",
+        "grid size-5 shrink-0 place-items-center rounded-full border-[1.5px] transition-[background-color,border-color,transform] duration-150 active:scale-[0.97]",
         done
-          ? "border-accent bg-accent text-accent-fg"
-          : "border-border-strong hover:border-accent",
+          ? "border-primary bg-primary text-primary-fg"
+          : "border-border-strong hover:border-fg-subtle",
       )}
     >
       {done ? (
         <motion.span
-          initial={{ scale: 0.4, opacity: 0 }}
+          initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ type: "spring", stiffness: 600, damping: 26 }}
+          transition={{ duration: 0.15, ease: [0.22, 1, 0.36, 1] }}
         >
-          <Check className="size-3.5" strokeWidth={3} aria-hidden />
+          <Check className="size-3.5 [stroke-width:2.5]" aria-hidden />
         </motion.span>
       ) : null}
     </button>
@@ -114,7 +114,7 @@ export function TaskItem({
 
   return (
     <li className="group">
-      <div className="relative flex items-start gap-3 rounded-2xl px-3 py-3 transition-colors focus-within:bg-surface hover:bg-surface">
+      <div className="relative flex items-start gap-3 rounded-[var(--radius-field)] px-3 py-2.5 transition-colors focus-within:bg-surface hover:bg-surface">
         <div className="relative z-10 pt-0.5">
           <CompleteButton id={task.id} title={task.title} done={done} onToggle={toggle} />
         </div>
@@ -123,7 +123,7 @@ export function TaskItem({
             type="button"
             onClick={() => open(task.id)}
             className={cn(
-              "block w-full text-left text-[15px] leading-snug break-words after:absolute after:inset-0 after:rounded-2xl focus-visible:outline-none focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-offset-[-2px] focus-visible:after:outline-ring",
+              "block w-full text-left text-[15px] leading-snug break-words after:absolute after:inset-0 after:rounded-[var(--radius-field)] focus-visible:outline-none focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-offset-[-2px] focus-visible:after:outline-ring",
               done && "text-fg-subtle line-through decoration-fg-subtle/60",
             )}
           >
@@ -161,7 +161,7 @@ export function TaskItem({
               </span>
             ) : null}
             {task.tags.map((t) => (
-              <span key={t.id} className="rounded-full bg-surface-strong px-2 py-0.5 text-fg-muted">
+              <span key={t.id} className="text-fg-subtle">
                 #{t.name}
               </span>
             ))}

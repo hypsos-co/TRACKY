@@ -197,7 +197,7 @@ function DetailForm({
           label="Etiquetas"
           value={tags}
           onChange={(e) => setTags(e.target.value)}
-          hint="Separadas por comas."
+          hint="Separadas por comas"
           placeholder="casa, recados"
         />
         <Textarea
@@ -246,7 +246,7 @@ function DetailForm({
             maxLength={300}
             className="h-11 min-w-0 flex-1 rounded-[var(--radius-field)] border border-border bg-surface px-3.5 text-[15px] outline-none focus:border-ring"
           />
-          <Button type="submit" variant="glass" disabled={pending || !subtask.trim()}>
+          <Button type="submit" variant="secondary" disabled={pending || !subtask.trim()}>
             Añadir
           </Button>
         </form>

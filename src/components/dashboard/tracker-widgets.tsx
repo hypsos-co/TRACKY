@@ -49,7 +49,7 @@ export function TrackerLatestWidget({ data }: { data: TrackerWidgetData }) {
   if (!data.entries)
     return (
       <>
-        <p className="text-[14px] text-fg-muted">Aún no hay registros.</p>
+        <p className="text-[14px] text-fg-muted">Aún no hay registros</p>
         <Open id={data.id}>Añadir el primero</Open>
       </>
     );
@@ -57,23 +57,30 @@ export function TrackerLatestWidget({ data }: { data: TrackerWidgetData }) {
   if (latest && data.spec.y) {
     const delta = latest.previous === null ? null : latest.value - latest.previous;
     const Icon = delta && delta > 0 ? ArrowUpRight : ArrowDownRight;
+    const day = (d: string) => formatDay(d, { day: "numeric", month: "short" });
     return (
       <>
         <p className="text-[13px] text-fg-muted">{data.spec.y.name}</p>
-        <p className="text-[34px] leading-tight font-medium tracking-[-0.02em] tabular-nums">
+        <p className="mt-1 flex items-center gap-2 text-[28px] leading-none font-medium tabular-nums">
           {fmt(latest.value)}
+          <span className="now-dot" aria-hidden />
         </p>
-        <p className="mt-1 flex flex-wrap items-center gap-x-2 text-[13px] text-fg-muted">
-          <span>{formatDay(latest.day, { day: "numeric", month: "short" })}</span>
-          {delta !== null && delta !== 0 ? (
-            <span className="inline-flex items-center gap-0.5 text-fg">
-              <Icon className="size-3.5" aria-hidden />
-              {delta > 0 ? "+" : "−"}
-              {fmt(Math.abs(delta))}
-              <span className="sr-only"> respecto al registro anterior</span>
-            </span>
-          ) : delta === 0 ? (
-            <span>Sin cambios</span>
+        <p className="mt-2 text-[13px] text-fg-muted tabular-nums">
+          {day(latest.day)}
+          {delta !== null && latest.previousDay ? (
+            delta === 0 ? (
+              <> · sin cambios desde el {day(latest.previousDay)}</>
+            ) : (
+              <>
+                {" · "}
+                <span className="inline-flex items-center gap-0.5 text-fg">
+                  <Icon className="size-3.5" aria-hidden />
+                  {delta > 0 ? "+" : "−"}
+                  {fmt(Math.abs(delta))}
+                </span>{" "}
+                desde el {day(latest.previousDay)}
+              </>
+            )
           ) : null}
         </p>
         <Open id={data.id}>Abrir {data.name}</Open>
@@ -83,11 +90,11 @@ export function TrackerLatestWidget({ data }: { data: TrackerWidgetData }) {
 
   return (
     <>
-      <p className="text-[34px] leading-tight font-medium tabular-nums">
+      <p className="text-[28px] leading-none font-medium tabular-nums">
         {count(data.entries, "registro")}
       </p>
       {lastEntry ? (
-        <p className="mt-1 truncate text-[13px] text-fg-muted">
+        <p className="mt-2 truncate text-[13px] text-fg-muted">
           Último: {lastEntry.title || "sin título"}
           {lastEntry.day
             ? ` · ${formatDay(lastEntry.day, { day: "numeric", month: "short" })}`

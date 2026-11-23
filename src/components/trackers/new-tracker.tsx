@@ -1,5 +1,6 @@
 "use client";
 
+import { TrackerIcon } from "./tracker-icon";
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Copy, Plus, Sparkles } from "lucide-react";
@@ -57,7 +58,7 @@ export function NewTrackerButton({ trackers }: { trackers: { id: string; name: s
         open={open}
         onClose={() => setOpen(false)}
         title="Nuevo tracker"
-        description="Sigue cualquier cosa: peso, gastos, lecturas, hábitos…"
+        description="Desde una plantilla, en blanco o copiando otro"
       >
         <form onSubmit={submit} noValidate className="flex flex-col gap-4 pb-2">
           {error ? <Alert tone="error">{error}</Alert> : null}
@@ -77,9 +78,9 @@ export function NewTrackerButton({ trackers }: { trackers: { id: string; name: s
                 disabled={value === "duplicate" && !trackers.length}
                 onClick={() => setMode(value)}
                 className={cn(
-                  "flex flex-col items-center gap-1 rounded-2xl border p-3 text-[13px] font-medium transition-colors disabled:opacity-40",
+                  "flex flex-col items-center gap-1 rounded-[var(--radius-field)] border p-3 text-[13px] font-medium transition-colors disabled:opacity-40",
                   mode === value
-                    ? "border-accent bg-surface-strong"
+                    ? "border-primary bg-surface-strong"
                     : "border-border hover:bg-surface",
                 )}
               >
@@ -98,14 +99,14 @@ export function NewTrackerButton({ trackers }: { trackers: { id: string; name: s
                     aria-pressed={template === t.key}
                     onClick={() => setTemplate(t.key)}
                     className={cn(
-                      "flex h-full w-full flex-col gap-0.5 rounded-2xl border p-3 text-left",
+                      "flex h-full w-full flex-col gap-1 rounded-[var(--radius-field)] border p-3 text-left",
                       template === t.key
-                        ? "border-accent bg-surface-strong"
+                        ? "border-primary bg-surface-strong"
                         : "border-border hover:bg-surface",
                     )}
                   >
-                    <span className="font-medium">
-                      <span aria-hidden>{t.icon}</span> {t.name}
+                    <span className="flex items-center gap-2 font-medium">
+                      <TrackerIcon icon={t.icon} /> {t.name}
                     </span>
                     <span className="text-[12px] text-fg-muted">{t.description}</span>
                   </button>

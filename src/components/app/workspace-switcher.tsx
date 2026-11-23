@@ -68,7 +68,7 @@ export function WorkspaceSwitcher({
         open={open}
         onClose={() => setOpen(false)}
         title="Espacios de trabajo"
-        description="Cada espacio tiene sus propias tareas, proyectos y calendario."
+        description="Cada espacio tiene sus propias tareas, proyectos y calendario"
       >
         <ul className="flex flex-col gap-1">
           {workspaces.map((w) => (
@@ -93,7 +93,7 @@ export function WorkspaceSwitcher({
                   <span className="text-[12px] text-fg-subtle">Personal</span>
                 ) : null}
                 {w.id === currentId ? (
-                  <Check className="size-4 text-accent" aria-label="Actual" />
+                  <Check className="size-4 text-fg-muted" aria-label="Actual" />
                 ) : null}
               </button>
             </li>
@@ -119,7 +119,7 @@ export function WorkspaceSwitcher({
             </div>
           </form>
         ) : (
-          <Button variant="glass" className="mt-4 w-full" onClick={() => setCreating(true)}>
+          <Button variant="secondary" className="mt-4 w-full" onClick={() => setCreating(true)}>
             <Plus className="size-4" aria-hidden /> Nuevo espacio
           </Button>
         )}

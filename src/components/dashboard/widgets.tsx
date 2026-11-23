@@ -29,7 +29,7 @@ function More({ href, children }: { href: string; children: React.ReactNode }) {
 }
 
 export function QuickCaptureWidget() {
-  return <QuickAdd placeholder="¿Qué tienes en mente? (mañana 10:00 !alta #trabajo)" />;
+  return <QuickAdd placeholder="Añadir tarea, p. ej. «mañana 10:00 !alta #trabajo»" />;
 }
 
 export function TasksTodayWidget({ tasks, today }: { tasks: Task[]; today: ISODate }) {
@@ -38,7 +38,7 @@ export function TasksTodayWidget({ tasks, today }: { tasks: Task[]; today: ISODa
     .sort((a, b) =>
       a.due_date! < b.due_date! ? -1 : a.due_date! > b.due_date! ? 1 : b.priority - a.priority,
     );
-  if (!due.length) return <p className="text-[14px] text-fg-muted">Nada pendiente para hoy. ✨</p>;
+  if (!due.length) return <p className="text-[14px] text-fg-muted">Nada pendiente para hoy</p>;
   return (
     <>
       <ul className="-mx-3 flex flex-col">
@@ -71,7 +71,7 @@ export function UpcomingEventsWidget({
     )
     .slice(0, 6);
   if (!upcoming.length)
-    return <p className="text-[14px] text-fg-muted">Sin eventos en los próximos 7 días.</p>;
+    return <p className="text-[14px] text-fg-muted">Sin eventos en los próximos 7 días</p>;
   return (
     <>
       <ul className="flex flex-col gap-2">
@@ -79,9 +79,9 @@ export function UpcomingEventsWidget({
           <li key={e.id}>
             <Link
               href={`/calendar?view=day&date=${e.startDay < today ? today : e.startDay}&e=${e.id}`}
-              className="flex items-center gap-3 rounded-xl px-2 py-1.5 hover:bg-surface"
+              className="flex items-center gap-3 rounded-lg px-2 py-1.5 hover:bg-surface"
             >
-              <span className="w-20 shrink-0 text-[12px] text-fg-subtle">
+              <span className="w-20 shrink-0 text-[12px] text-fg-subtle tabular-nums">
                 {dueLabel(e.startDay < today ? today : e.startDay, today)}
                 <span className="block text-fg-muted">
                   {e.all_day ? "Todo el día" : e.startTime}
@@ -125,7 +125,7 @@ export function TaskStatsWidget({
           ["Vencidas", overdue],
           ["Hechas (7 d)", week],
         ].map(([label, value]) => (
-          <div key={label} className="rounded-xl bg-surface p-3">
+          <div key={label} className="rounded-lg bg-surface p-3">
             <dt className="text-[12px] text-fg-muted">{label}</dt>
             <dd
               className={cn(
@@ -138,35 +138,46 @@ export function TaskStatsWidget({
           </div>
         ))}
       </dl>
-      <figure>
-        <div className="flex h-24 items-end gap-1.5" aria-hidden>
-          {counts.map((c, i) => (
-            <div key={days[i]} className="flex flex-1 flex-col items-center gap-1">
-              <div
-                className={cn("w-full rounded-md", c ? "bg-accent" : "bg-surface-strong")}
-                style={{ height: `${Math.max(6, (c / max) * 80)}px` }}
-              />
-              <span className="text-[11px] text-fg-subtle">
-                {formatDay(days[i], { weekday: "narrow" })}
-              </span>
-            </div>
-          ))}
-        </div>
-        <figcaption className="mt-1 text-[12px] text-fg-subtle">
-          Tareas completadas por día
-        </figcaption>
-        <table className="sr-only">
-          <caption>Tareas completadas por día, últimos 7 días</caption>
-          <tbody>
-            {days.map((d, i) => (
-              <tr key={d}>
-                <th scope="row">{formatDay(d, { weekday: "long", day: "numeric" })}</th>
-                <td>{counts[i]}</td>
-              </tr>
+      {week === 0 ? (
+        <p className="text-[13px] text-fg-subtle">Sin tareas completadas en los últimos 7 días</p>
+      ) : (
+        <figure>
+          <div className="flex h-24 items-end gap-1" aria-hidden>
+            {counts.map((c, i) => (
+              <div key={days[i]} className="flex flex-1 flex-col items-center gap-1">
+                <div
+                  className={cn(
+                    "w-full rounded-t-sm",
+                    !c
+                      ? "bg-surface-strong"
+                      : i === counts.length - 1
+                        ? "bg-chart-1"
+                        : "bg-fg-subtle/45",
+                  )}
+                  style={{ height: `${Math.max(4, (c / max) * 80)}px` }}
+                />
+                <span className="text-[11px] text-fg-subtle">
+                  {formatDay(days[i], { weekday: "narrow" })}
+                </span>
+              </div>
             ))}
-          </tbody>
-        </table>
-      </figure>
+          </div>
+          <figcaption className="mt-1 text-[12px] text-fg-subtle">
+            Tareas completadas por día
+          </figcaption>
+          <table className="sr-only">
+            <caption>Tareas completadas por día, últimos 7 días</caption>
+            <tbody>
+              {days.map((d, i) => (
+                <tr key={d}>
+                  <th scope="row">{formatDay(d, { weekday: "long", day: "numeric" })}</th>
+                  <td>{counts[i]}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </figure>
+      )}
     </div>
   );
 }
@@ -178,7 +189,7 @@ export function ProjectsWidget({ projects }: { projects: Project[] }) {
   if (!active.length)
     return (
       <>
-        <p className="text-[14px] text-fg-muted">No hay proyectos activos.</p>
+        <p className="text-[14px] text-fg-muted">No hay proyectos activos</p>
         <More href="/projects">Crear un proyecto</More>
       </>
     );
@@ -189,7 +200,7 @@ export function ProjectsWidget({ projects }: { projects: Project[] }) {
           <li key={p.id}>
             <Link
               href={`/projects/${p.id}`}
-              className="block rounded-xl px-2 py-1.5 hover:bg-surface"
+              className="block rounded-lg px-2 py-1.5 hover:bg-surface"
             >
               <span className="block truncate text-[14px] font-medium">{p.name}</span>
               <ProgressBar done={p.progress.done} total={p.progress.total} className="mt-1.5" />
@@ -230,13 +241,16 @@ export function CalendarMonthWidget({
             key={d}
             href={`/calendar?view=day&date=${d}`}
             className={cn(
-              "relative mx-auto grid size-8 place-items-center rounded-full",
+              "relative mx-auto grid size-8 place-items-center rounded-lg tabular-nums",
               d.slice(0, 7) !== today.slice(0, 7) && "opacity-35",
-              d === today ? "bg-accent font-semibold text-accent-fg" : "hover:bg-surface-strong",
+              d === today ? "bg-surface-strong font-medium text-fg" : "hover:bg-surface-strong",
             )}
+            aria-current={d === today ? "date" : undefined}
           >
             {Number(d.slice(8))}
-            {busy.has(d) && d !== today ? (
+            {d === today ? (
+              <span aria-hidden className="now-dot absolute bottom-0.5" />
+            ) : busy.has(d) ? (
               <span
                 aria-hidden
                 className="absolute bottom-0.5 size-1 rounded-full bg-primary-text"

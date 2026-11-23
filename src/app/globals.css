@@ -11,6 +11,8 @@
  * and are documented with their ratio in DESIGN_SYSTEM.md.
  *
  * Dark is the default theme. `data-theme="light"` on <html> switches it.
+ * Polished with the unslop method (Damir Sokolovsky, CC BY 4.0): quiet chrome,
+ * one lime action per screen, the lime dot as signature.
  */
 
 :root {
@@ -31,15 +33,19 @@
   --bg: var(--brand-ink);
   --fg: var(--brand-ice);
   --fg-muted: #9da4aa; /* 7.6:1 on ink */
-  --fg-subtle: #7d848a; /* 5.1:1 on ink */
+  --fg-subtle: #8a9197; /* 6.0:1 on ink, ≥ 4.7:1 on every raised surface */
 
-  --surface: rgb(239 248 255 / 0.045);
-  --surface-strong: rgb(239 248 255 / 0.08);
-  --surface-solid: #11161d;
-  --border: rgb(239 248 255 / 0.09);
-  --border-strong: rgb(239 248 255 / 0.16);
-  --glass-highlight: rgb(255 255 255 / 0.08);
-  --glass-shadow: 0 24px 60px -20px rgb(0 0 0 / 0.6);
+  /* One ink ramp (unslop): depth from surface steps + hairlines, not glows. */
+  --bg-deep: #080b0f; /* sidebar */
+  --card: #10151c;
+  --surface: rgb(239 248 255 / 0.04); /* subtle fill: inputs, hover */
+  --surface-strong: rgb(239 248 255 / 0.07); /* raised: active row, selection */
+  --surface-solid: #161c24; /* popovers, dialogs, <option> */
+  --border: rgb(239 248 255 / 0.08);
+  --border-strong: rgb(239 248 255 / 0.14);
+  --shadow-card: none;
+  --shadow-float: 0 16px 40px -12px rgb(0 0 0 / 0.6);
+  --highlight: inset 0 1px 0 rgb(255 255 255 / 0.06);
 
   --primary: var(--brand-royal); /* fills; white text 5.2:1 */
   --primary-fg: var(--brand-white);
@@ -47,11 +53,14 @@
 
   --accent: var(--brand-neon); /* "lime gets the click" */
   --accent-fg: var(--brand-void); /* 15:1 */
-  --accent-glow: rgb(187 239 31 / 0.35);
+
+  /* Signature: the lime dot of "TRACKY." marks "now" (last record, today, active section). */
+  --dot: var(--brand-neon);
+  --dot-ring: transparent;
 
   --danger: var(--brand-signal); /* 4.9:1 on ink */
   --danger-fg: var(--brand-void); /* 5.3:1 on signal */
-  --danger-text: var(--brand-signal);
+  --danger-text: #ff5c87; /* signal tint: ≥ 5.1:1 on every dark surface */
   --danger-surface: rgb(255 0 85 / 0.1);
 
   --success-text: var(--brand-neon);
@@ -63,15 +72,13 @@
   --chart-1: #5c7dff;
   --chart-grid: rgb(239 248 255 / 0.08);
 
-  --ambient-1: rgb(11 26 92 / 0.85); /* navy */
-  --ambient-2: rgb(47 91 255 / 0.22); /* royal */
-  --ambient-3: rgb(187 239 31 / 0.08); /* lime */
-
-  --radius-card: 1.5rem;
-  --radius-field: 0.875rem;
+  /* Radius by size; nested radius = outer − padding. */
+  --radius-sm: 0.375rem; /* tags, keycaps */
+  --radius-field: 0.625rem; /* inputs, buttons, rows */
+  --radius-card: 1rem;
+  --radius-panel: 1.25rem; /* dialogs, sheets */
 
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
 }
 
 :root[data-theme="light"] {
@@ -82,13 +89,16 @@
   --fg-muted: #4b5058; /* ~7.5:1 on ice */
   --fg-subtle: #62676e; /* ~5.3:1 on ice */
 
-  --surface: rgb(255 255 255 / 0.62);
-  --surface-strong: rgb(255 255 255 / 0.85);
+  --bg-deep: var(--brand-ice);
+  --card: #ffffff;
+  --surface: rgb(11 15 20 / 0.03);
+  --surface-strong: rgb(11 15 20 / 0.06);
   --surface-solid: #ffffff;
   --border: rgb(11 15 20 / 0.08);
-  --border-strong: rgb(11 15 20 / 0.16);
-  --glass-highlight: rgb(255 255 255 / 0.9);
-  --glass-shadow: 0 24px 60px -24px rgb(11 26 92 / 0.25);
+  --border-strong: rgb(11 15 20 / 0.14);
+  --shadow-card: 0 1px 2px rgb(11 15 20 / 0.05);
+  --shadow-float: 0 8px 24px rgb(11 15 20 / 0.08);
+  --highlight: none;
 
   --primary: var(--brand-royal);
   --primary-fg: var(--brand-white);
@@ -96,7 +106,9 @@
 
   --accent: var(--brand-lime);
   --accent-fg: var(--brand-ink);
-  --accent-glow: rgb(212 245 60 / 0.55);
+
+  --dot: var(--brand-lime);
+  --dot-ring: rgb(11 15 20 / 0.6); /* lime alone vanishes on white */
 
   --danger: var(--brand-signal);
   --danger-fg: var(--brand-void);
@@ -110,14 +122,12 @@
 
   --chart-1: var(--brand-royal);
   --chart-grid: rgb(11 15 20 / 0.08);
-
-  --ambient-1: rgb(47 91 255 / 0.18);
-  --ambient-2: rgb(212 245 60 / 0.3);
-  --ambient-3: rgb(11 26 92 / 0.08);
 }
 
 @theme inline {
   --color-bg: var(--bg);
+  --color-bg-deep: var(--bg-deep);
+  --color-card: var(--card);
   --color-fg: var(--fg);
   --color-fg-muted: var(--fg-muted);
   --color-fg-subtle: var(--fg-subtle);
@@ -155,26 +165,21 @@
     system-ui, "Segoe UI", Roboto, sans-serif;
   --font-mono: "SF Mono", ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace;
 
-  --radius-card: var(--radius-card);
-  --radius-field: var(--radius-field);
-
   --ease-out: var(--ease-out);
-  --ease-spring: var(--ease-spring);
 
-  --animate-rise: rise 0.6s var(--ease-out) both;
-  --animate-fade: fade 0.4s var(--ease-out) both;
+  /* One entrance per screen: the main content fades and rises 8px. */
+  --animate-rise: rise 0.4s var(--ease-out) both;
+  --animate-fade: fade 0.2s var(--ease-out) both;
 }
 
 @keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(12px) scale(0.985);
-    filter: blur(4px);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
     transform: none;
-    filter: none;
   }
 }
 
@@ -194,12 +199,11 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  /* No body background: it would paint over the fixed .ambient layer (z-index -1). */
   body {
+    background: var(--bg);
     color: var(--fg);
     font-family: var(--font-sans);
     font-feature-settings: "ss01", "cv11";
-    letter-spacing: -0.005em;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
@@ -215,6 +219,12 @@
     outline-offset: 3px;
   }
 
+  /* One icon set, one stroke (lucide). */
+  /* :where() keeps specificity at 0 so a utility like [stroke-width:2] can still override it. */
+  :where(svg.lucide) {
+    stroke-width: 1.5;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -228,48 +238,36 @@
 }
 
 @layer components {
-  /* Liquid glass panel: translucent fill, blur, hairline border, top highlight. */
-  .glass {
-    background: var(--surface);
+  /* Card: solid surface + hairline. Depth comes from surface steps, never glows. */
+  .card {
+    background: var(--card);
     border: 1px solid var(--border);
-    box-shadow:
-      inset 0 1px 0 0 var(--glass-highlight),
-      var(--glass-shadow);
-    -webkit-backdrop-filter: blur(24px) saturate(160%);
-    backdrop-filter: blur(24px) saturate(160%);
+    box-shadow: var(--shadow-card);
   }
 
-  .glass-strong {
-    background: var(--surface-strong);
+  /* Floating layer (popovers, dialogs, toasts): the one place a soft neutral shadow is allowed. */
+  .panel-float {
+    background: var(--surface-solid);
     border: 1px solid var(--border-strong);
-    box-shadow:
-      inset 0 1px 0 0 var(--glass-highlight),
-      var(--glass-shadow);
-    -webkit-backdrop-filter: blur(32px) saturate(180%);
-    backdrop-filter: blur(32px) saturate(180%);
+    box-shadow: var(--shadow-float);
   }
 
-  /* Opaque-enough glass for bars that float over scrolling content (tab bar). */
-  .glass-bar {
-    background: color-mix(in srgb, var(--bg) 72%, transparent);
+  /* Bar floating over scrolling content (mobile tab bar). */
+  .bar-float {
+    background: var(--card);
     border: 1px solid var(--border-strong);
-    box-shadow:
-      inset 0 1px 0 0 var(--glass-highlight),
-      var(--glass-shadow);
-    -webkit-backdrop-filter: blur(28px) saturate(180%);
-    backdrop-filter: blur(28px) saturate(180%);
+    box-shadow: var(--shadow-float);
   }
 
-  /* Fixed ambient backdrop — navy/royal/lime glows, echoing the brand gradient. */
-  .ambient {
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-    background:
-      radial-gradient(60% 50% at 12% 0%, var(--ambient-1), transparent 70%),
-      radial-gradient(45% 40% at 95% 15%, var(--ambient-2), transparent 70%),
-      radial-gradient(40% 35% at 70% 100%, var(--ambient-3), transparent 70%), var(--bg);
+  /* Signature: the lime dot of the wordmark, marking "now". */
+  .now-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: var(--dot);
+    box-shadow: 0 0 0 1px var(--dot-ring);
+    flex-shrink: 0;
   }
 
   .text-balance {
@@ -288,9 +286,7 @@
     max-height: none;
   }
   dialog::backdrop {
-    background: rgb(5 8 12 / 0.55);
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
+    background: rgb(5 8 12 / 0.6);
   }
   dialog[open] {
     animation: fade 0.2s var(--ease-out) both;

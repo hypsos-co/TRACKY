@@ -123,9 +123,9 @@ export function ValueInput({
                     onChange(on ? selected.filter((s) => s !== o.id) : [...selected, o.id])
                   }
                   className={cn(
-                    "rounded-full border px-3 py-1.5 text-[13px]",
+                    "rounded-md border px-2.5 py-1 text-[13px]",
                     on
-                      ? "border-accent bg-accent text-accent-fg"
+                      ? "border-primary bg-primary text-primary-fg"
                       : "border-border text-fg-muted hover:text-fg",
                   )}
                 >
@@ -155,7 +155,7 @@ export function ValueInput({
                 className="grid size-9 place-items-center rounded-lg hover:bg-surface-strong"
               >
                 <Star
-                  className={cn("size-5", i <= n ? "fill-accent text-accent" : "text-fg-subtle")}
+                  className={cn("size-5", i <= n ? "fill-primary text-primary" : "text-fg-subtle")}
                   aria-hidden
                 />
               </button>
@@ -220,7 +220,7 @@ export function ValueInput({
               </option>
             ))}
           </select>
-          <p className="text-[12px] text-fg-subtle">Mantén pulsado Ctrl/⌘ para elegir varios.</p>
+          <p className="text-[12px] text-fg-subtle">Mantén pulsado Ctrl/⌘ para elegir varios</p>
         </div>
       );
     }

@@ -82,7 +82,7 @@ Flujos:
 ## 4. Renderizado y caché
 
 - Shell estático (layout, navegación, cabeceras) → HTML instantáneo.
-- Todo lo que depende del usuario (saludo, perfil, formularios con datos) va en `<Suspense>` con esqueletos y se transmite en streaming (◐ _Partial Prerender_ en `next build`).
+- Todo lo que depende del usuario (panel, perfil, formularios con datos) va en `<Suspense>` con esqueletos y se transmite en streaming (◐ _Partial Prerender_ en `next build`).
 - Mutaciones → `revalidatePath("/", "layout")`. Más adelante: `use cache` + `cacheTag(user:<id>)` para datos derivados de la sesión (ver guía oficial _authentication-with-cache-components_).
 
 ## 5. Seguridad

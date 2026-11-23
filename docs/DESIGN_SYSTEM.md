@@ -11,13 +11,25 @@ La identidad visual definitiva está **pendiente de entrega** (paleta, tipograf�
 - Toda la interfaz consume **tokens semánticos** (`--bg`, `--fg`, `--accent`, `--primary`…) definidos en un solo lugar (`src/app/globals.css`). Sustituir la marca = cambiar los valores de `--brand-*`, la pila tipográfica y `src/components/brand/*`; los componentes no cambian.
 - Pendiente de definir: iconografía propia (hoy `lucide-react`), ilustraciones, naming definitivo, uso del wordmark.
 
-## 1. Principios
+## 1. Dirección y principios
 
-1. **Oscuro por defecto, premium y sobrio** — inspirado en Linear (densidad, oscuridad profesional), Apple (vidrio líquido, tipografía SF, movimiento físico) y Notion (modularidad).
-2. **"Blue does the work, lime gets the click."** El azul Royal hace el trabajo (selección, enlaces, foco); el lima es _la_ acción de cada pantalla. Si hay dos botones lima, sobra uno.
-3. **Vidrio con propósito.** Superficies translúcidas sobre un fondo ambiental (glows navy/royal/lima). Nunca vidrio sobre vidrio sin necesidad.
-4. **Accesible siempre.** WCAG 2.1 AA verificado automáticamente (axe en E2E). Ningún color de texto por debajo de 4.5:1.
-5. **Movimiento que informa.** Entradas suaves y microinteracciones con resorte; todo se desactiva con `prefers-reduced-motion`.
+Pulido con la skill **unslop** de Damir Sokolovsky ([@heydamir](https://x.com/heydamir), [repo](https://github.com/heydamir/unslop), licencia CC BY 4.0), instalada en el proyecto (`.claude/settings.json`). Dirección acordada con el propietario el 23/11/2026:
+
+- **Producto:** un sistema personal donde organizas tareas y calendario y mides lo que te importa (peso, sueño, lecturas…) en un panel que montas tú.
+- **Carácter:** preciso, constante, con un punto eléctrico.
+- **Mundo:** un cuaderno de bitácora nocturno y un instrumento de medida. Tinta Ink, trazo Royal, el lima como marcador fosforito.
+- **Momentos:** los gráficos de los trackers y la cifra del último valor. Ahí va el color; el resto, en calma.
+- **Firma:** el punto de «TRACKY.». Un punto lima (`.now-dot`) marca «el ahora»: el último registro de cada gráfico, el día de hoy y la sección activa. Solo ahí.
+
+Principios:
+
+1. **Cromo en calma.** Fondo Ink plano, superficies sólidas con hairline; la profundidad sale de escalones de superficie, nunca de brillos, manchas de color ni vidrio.
+2. **"Blue does the work, lime gets the click."** Royal para selección, enlaces, foco y datos; el lima es _la_ acción de cada pantalla y la firma. Si hay dos botones lima, sobra uno.
+3. **Textos que dicen algo.** Títulos que nombran el contexto (la página o el día), sin saludos, sin exclamaciones, sin punto final en etiquetas y subtítulos; los cambios dicen respecto a qué («−2,9 kg desde el 26 oct»).
+4. **Accesible siempre.** WCAG 2.1 AA verificado automáticamente (axe en E2E). Ningún color de texto por debajo de 4.5:1 en ninguna superficie.
+5. **Movimiento que explica.** Una sola entrada por pantalla, sin rebotes ni bucles; todo se desactiva con `prefers-reduced-motion`.
+
+Antes de dar por terminada una pantalla nueva, pásale el checklist de unslop (`/unslop` o `/unslop:unslop`).
 
 ## 2. Paleta
 
@@ -26,7 +38,7 @@ La identidad visual definitiva está **pendiente de entrega** (paleta, tipograf�
 | Token CSS        | HEX       | Origen                 | Rol                                            |
 | ---------------- | --------- | ---------------------- | ---------------------------------------------- |
 | `--brand-ink`    | `#0B0F14` | Paleta _Madison_ · Ink | Fondo (oscuro), texto (claro)                  |
-| `--brand-navy`   | `#0B1A5C` | _Madison_ · Navy       | Profundidad: glow ambiental                    |
+| `--brand-navy`   | `#0B1A5C` | _Madison_ · Navy       | Reservado (sin uso tras unslop: no hay glows)  |
 | `--brand-royal`  | `#2F5BFF` | _Madison_ · Royal      | Primario: selección, botones secundarios, foco |
 | `--brand-lime`   | `#D4F53C` | _Madison_ · Lime       | Acento CTA en modo claro                       |
 | `--brand-white`  | `#FFFFFF` | _Madison_ · White      | Texto sobre Royal, superficies claras          |
@@ -39,16 +51,17 @@ La identidad visual definitiva está **pendiente de entrega** (paleta, tipograf�
 
 No son colores nuevos de marca: son tintes/sombras de los anteriores para alcanzar AA.
 
-| Token            | Tema   | HEX       | Derivado de         | Contraste       |
-| ---------------- | ------ | --------- | ------------------- | --------------- |
-| `--fg-muted`     | oscuro | `#9DA4AA` | Ice 64 % sobre Ink  | 7.6:1 sobre Ink |
-| `--fg-subtle`    | oscuro | `#7D848A` | Ice 50 % sobre Ink  | 5.1:1 sobre Ink |
-| `--primary-text` | oscuro | `#829DFF` | Royal 60 % + blanco | 7.5:1 sobre Ink |
-| `--fg-muted`     | claro  | `#4B5058` | Ink sobre Ice       | 7.6:1 sobre Ice |
-| `--fg-subtle`    | claro  | `#62676E` | Ink sobre Ice       | 5.3:1 sobre Ice |
-| `--primary-text` | claro  | `#2649CC` | Royal 80 % + negro  | 6.7:1 sobre Ice |
-| `--danger-text`  | claro  | `#CC0044` | Signal 80 % + negro | 5.4:1 sobre Ice |
-| `--success-text` | claro  | `#556218` | Lima 40 % + negro   | 6.2:1 sobre Ice |
+| Token            | Tema   | HEX       | Derivado de         | Contraste                                           |
+| ---------------- | ------ | --------- | ------------------- | --------------------------------------------------- |
+| `--fg-muted`     | oscuro | `#9DA4AA` | Ice 64 % sobre Ink  | 7.6:1 sobre Ink                                     |
+| `--fg-subtle`    | oscuro | `#8A9197` | Ice sobre Ink       | 6.0:1 sobre Ink, ≥ 4.7:1 sobre superficies elevadas |
+| `--danger-text`  | oscuro | `#FF5C87` | Signal + blanco     | ≥ 5.1:1 sobre cualquier superficie oscura           |
+| `--primary-text` | oscuro | `#829DFF` | Royal 60 % + blanco | 7.5:1 sobre Ink                                     |
+| `--fg-muted`     | claro  | `#4B5058` | Ink sobre Ice       | 7.6:1 sobre Ice                                     |
+| `--fg-subtle`    | claro  | `#62676E` | Ink sobre Ice       | 5.3:1 sobre Ice                                     |
+| `--primary-text` | claro  | `#2649CC` | Royal 80 % + negro  | 6.7:1 sobre Ice                                     |
+| `--danger-text`  | claro  | `#CC0044` | Signal 80 % + negro | 5.4:1 sobre Ice                                     |
+| `--success-text` | claro  | `#556218` | Lima 40 % + negro   | 6.2:1 sobre Ice                                     |
 
 Combinaciones de relleno verificadas: blanco sobre Royal 5.2:1 · Void sobre Neón 15:1 · Ink sobre Lima 15.5:1 · Void sobre Signal 5.3:1 · Signal sobre Ink 4.9:1.
 
@@ -56,19 +69,19 @@ Combinaciones de relleno verificadas: blanco sobre Royal 5.2:1 · Void sobre Ne�
 
 ### 2.3 Tokens semánticos (úsalos siempre en lugar de los de marca)
 
-| Utilidad Tailwind                                                       | Uso                                              |
-| ----------------------------------------------------------------------- | ------------------------------------------------ |
-| `bg-bg`, `text-fg`                                                      | Fondo y texto base                               |
-| `text-fg-muted`, `text-fg-subtle`                                       | Texto secundario / terciario, placeholders       |
-| `bg-surface`, `bg-surface-strong`, `bg-surface-solid`                   | Superficies de vidrio (y sólida para `<option>`) |
-| `border-border`, `border-border-strong`                                 | Bordes hairline                                  |
-| `bg-primary` + `text-primary-fg`                                        | Botón Royal                                      |
-| `text-primary-text`                                                     | Enlaces y texto de acción                        |
-| `bg-accent` + `text-accent-fg`                                          | CTA lima                                         |
-| `bg-danger` + `text-danger-fg`, `text-danger-text`, `bg-danger-surface` | Destructivo / errores                            |
-| `text-success-text`, `bg-success-surface`                               | Confirmaciones                                   |
-| `outline-ring`                                                          | Anillo de foco                                   |
-| `--chart-1`, `--chart-grid` (SVG: `var(--chart-1)`)                     | Serie de gráficos y rejilla recesiva             |
+| Utilidad Tailwind                                                              | Uso                                                    |
+| ------------------------------------------------------------------------------ | ------------------------------------------------------ |
+| `bg-bg`, `text-fg`                                                             | Fondo y texto base                                     |
+| `text-fg-muted`, `text-fg-subtle`                                              | Texto secundario / terciario, placeholders             |
+| `bg-bg-deep`, `bg-card`, `bg-surface`, `bg-surface-strong`, `bg-surface-solid` | Rampa Ink: sidebar, tarjeta, relleno, activo, flotante |
+| `border-border`, `border-border-strong`                                        | Bordes hairline                                        |
+| `bg-primary` + `text-primary-fg`                                               | Botón Royal                                            |
+| `text-primary-text`                                                            | Enlaces y texto de acción                              |
+| `bg-accent` + `text-accent-fg`                                                 | CTA lima                                               |
+| `bg-danger` + `text-danger-fg`, `text-danger-text`, `bg-danger-surface`        | Destructivo / errores                                  |
+| `text-success-text`, `bg-success-surface`                                      | Confirmaciones                                         |
+| `outline-ring`                                                                 | Anillo de foco                                         |
+| `--chart-1`, `--chart-grid` (SVG: `var(--chart-1)`)                            | Serie de gráficos y rejilla recesiva                   |
 
 **Gráficos.** Una serie por gráfico (sin leyenda: el título la nombra), línea de 2 px, barras con extremo redondeado de 4 px anclado a la base, rejilla en `--chart-grid`, texto siempre en tokens de texto (nunca del color de la serie), cruceta + tooltip, flechas del teclado y «Ver como tabla». `--chart-1` es Royal `#2F5BFF` en claro y `#5C7DFF` en oscuro (validado contra cada superficie). Si algún día un gráfico necesita varias series, el orden de color se fija y se valida antes; no se generan colores sobre la marcha.
 
@@ -106,44 +119,50 @@ Escala (px): 44/34 display (`tracking -0.03em`, Medium) · 26 título de tarjeta
 
 ## 5. Superficies, radios y sombras
 
-| Clase           | Uso                                                                                                                             |
-| --------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| `.glass`        | Tarjetas y paneles: relleno translúcido, `backdrop-filter: blur(24px) saturate(160%)`, borde hairline, brillo superior interior |
-| `.glass-strong` | Elementos elevados (popovers, modales)                                                                                          |
-| `.glass-bar`    | Barras flotantes sobre contenido que se desplaza (tab bar móvil): más opaca para legibilidad                                    |
-| `.ambient`      | Fondo fijo con glows navy/royal/lima (z-index −1)                                                                               |
+Una rampa Ink: `--bg-deep` (sidebar) → `--bg` (página) → `--card` → `--surface` / `--surface-strong` (rellenos y estado activo) → `--surface-solid` (capas flotantes).
 
-Radios: tarjetas `1.5rem` (`--radius-card`), campos `0.875rem` (`--radius-field`), botones y segmentados **píldora** (`rounded-full`), eco de las paletas de referencia.
+| Clase          | Uso                                                                                          |
+| -------------- | -------------------------------------------------------------------------------------------- |
+| `.card`        | Tarjetas y paneles: relleno sólido `--card` + hairline (en claro, sombra neutra mínima)      |
+| `.panel-float` | Capas que flotan (diálogos, popovers, toasts): `--surface-solid` + la única sombra permitida |
+| `.bar-float`   | Tab bar móvil sobre contenido que se desplaza                                                |
+| `.now-dot`     | La firma: punto lima de 6 px (con anillo oscuro en tema claro para que se vea sobre blanco)  |
+
+Estado activo (navegación, segmentados): `bg-surface-strong` + `shadow-[var(--highlight)]` (brillo superior de 1 px), nunca un relleno lima.
+
+Radios por tamaño (radio anidado = exterior − padding, nunca < 4 px): etiquetas y teclas `--radius-sm` 6 px · campos, botones y filas `--radius-field` 10 px · tarjetas `--radius-card` 16 px · diálogos y paneles `--radius-panel` 20 px. Solo son círculos los avatares, las casillas de tarea y los puntos.
+
+Iconos: un solo set (`lucide-react`), trazo 1.5 global (`:where(svg.lucide)`), 16 px en línea y 18 px en navegación, color del rol de texto. Los trackers usan iconos de línea (`src/lib/trackers/icons.ts`); los emojis antiguos se muestran con su equivalente.
 
 ## 6. Movimiento
 
-| Token             | Valor                                                          | Uso                                                                     |
-| ----------------- | -------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| `--ease-out`      | `cubic-bezier(0.22, 1, 0.36, 1)`                               | Entradas, transiciones de estado                                        |
-| `--ease-spring`   | `cubic-bezier(0.34, 1.4, 0.64, 1)`                             | Rebotes suaves                                                          |
-| `animate-rise`    | 0.6 s: opacidad + `translateY(12px)` + desenfoque 4px → nítido | Entrada de tarjetas/titulares (escalonar con `[animation-delay:80ms]`)  |
-| `animate-fade`    | 0.4 s                                                          | Elementos secundarios                                                   |
-| Resortes `motion` | `stiffness 500, damping 38–40`                                 | Indicadores activos con `layoutId` (sidebar, tab bar, selector de tema) |
+| Token          | Valor                                                                  | Uso                                                                             |
+| -------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| `--ease-out`   | `cubic-bezier(0.22, 1, 0.36, 1)`                                       | La única curva de la app                                                        |
+| `animate-rise` | 0.4 s: opacidad + `translateY(8px)`                                    | Una sola entrada por pantalla (el `<main>` del shell)                           |
+| `animate-fade` | 0.2 s                                                                  | Diálogos                                                                        |
+| Duraciones     | 150 ms feedback · 200 ms toasts · 300 ms barras de progreso (`scaleX`) | Solo color, fondo, borde, opacidad y `transform`; nunca `width/height/top/left` |
 
-Botones: `active:scale-[0.97]`. Todo respeta `prefers-reduced-motion`.
+Botones: `active:scale-[0.98]`. Sin resortes con rebote, sin bucles (solo el spinner de carga), sin movimiento al pasar el ratón. Todo respeta `prefers-reduced-motion`.
 
 ## 7. Componentes (Fase 1)
 
-| Componente                   | Ruta                                | Notas                                                                                                                     |
-| ---------------------------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| `Button` / `buttonClasses()` | `components/ui/button.tsx`          | Variantes `accent · primary · glass · ghost · danger`; tamaños `sm · md · lg · icon`. Usa `buttonClasses()` para `<Link>` |
-| `SubmitButton`               | `components/ui/submit-button.tsx`   | Estado pendiente del `<form>` con spinner                                                                                 |
-| `Field`                      | `components/ui/field.tsx`           | Label + input + hint + error enlazados con `aria-describedby`/`aria-invalid`                                              |
-| `PasswordField`              | `components/ui/password-field.tsx`  | Mostrar/ocultar accesible (`aria-pressed`)                                                                                |
-| `Alert`                      | `components/ui/alert.tsx`           | `role="alert"` para errores, `role="status"` para el resto                                                                |
-| `Card`                       | `components/ui/card.tsx`            | Superficie `.glass`                                                                                                       |
-| `ThemeToggle`                | `components/theme/theme-toggle.tsx` | `radiogroup` Oscuro / Claro / Sistema                                                                                     |
-| `SidebarNav`, `TabBar`       | `components/app/sidebar-nav.tsx`    | Sidebar (≥ md) y tab bar inferior (móvil)                                                                                 |
+| Componente                   | Ruta                                | Notas                                                                                                                         |
+| ---------------------------- | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `Button` / `buttonClasses()` | `components/ui/button.tsx`          | Variantes `accent · primary · secondary · ghost · danger`; tamaños `sm · md · lg · icon`. Usa `buttonClasses()` para `<Link>` |
+| `SubmitButton`               | `components/ui/submit-button.tsx`   | Estado pendiente del `<form>` con spinner                                                                                     |
+| `Field`                      | `components/ui/field.tsx`           | Label + input + hint + error enlazados con `aria-describedby`/`aria-invalid`                                                  |
+| `PasswordField`              | `components/ui/password-field.tsx`  | Mostrar/ocultar accesible (`aria-pressed`)                                                                                    |
+| `Alert`                      | `components/ui/alert.tsx`           | `role="alert"` para errores, `role="status"` para el resto                                                                    |
+| `Card`                       | `components/ui/card.tsx`            | Superficie `.card`                                                                                                            |
+| `ThemeToggle`                | `components/theme/theme-toggle.tsx` | `radiogroup` Oscuro / Claro / Sistema                                                                                         |
+| `SidebarNav`, `TabBar`       | `components/app/sidebar-nav.tsx`    | Sidebar (≥ md) y tab bar inferior (móvil)                                                                                     |
 
 ## 8. Layout responsive
 
 - **Móvil (vertical):** cabecera con logo + **tab bar inferior** flotante (alcance del pulgar), respeta `safe-area-inset-*`, contenido con `pb-32`.
-- **Escritorio (≥ 768 px):** **sidebar fija** de 256 px con vidrio, navegación y usuario al pie; contenido centrado `max-w-5xl`.
+- **Escritorio (≥ 768 px):** **sidebar fija** de 256 px (`--bg-deep` + hairline), filas de 36 px; contenido fluido hasta 1440 px.
+- **Portada:** hero partido (texto + vista previa del producto dibujada en código con datos de ejemplo); en móvil se apila y la vista previa se simplifica.
 - Objetivos táctiles ≥ 40 px.
 
 ## 9. Accesibilidad (checklist por componente)

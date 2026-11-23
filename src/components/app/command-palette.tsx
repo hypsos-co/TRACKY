@@ -139,7 +139,7 @@ export function CommandPalette() {
       onClick={(e) => e.target === dialogRef.current && close()}
       className="fixed inset-x-0 top-[12vh] mx-auto w-[min(620px,calc(100vw-24px))]"
     >
-      <div className="glass-strong overflow-hidden rounded-[var(--radius-card)] bg-[var(--surface-solid)]">
+      <div className="panel-float overflow-hidden rounded-[var(--radius-card)] bg-[var(--surface-solid)]">
         <div className="flex items-center gap-3 border-b border-border px-4">
           <Search className="size-5 text-fg-subtle" aria-hidden />
           <input
@@ -150,7 +150,7 @@ export function CommandPalette() {
               setActive(0);
             }}
             onKeyDown={onKeyDown}
-            placeholder="Busca o escribe una tarea…"
+            placeholder="Buscar o crear tarea"
             aria-label="Buscar o crear"
             role="combobox"
             aria-expanded
@@ -177,7 +177,7 @@ export function CommandPalette() {
               )}
             >
               <item.Icon
-                className={cn("size-[18px] shrink-0", i === activeIndex && "text-accent")}
+                className={cn("size-4 shrink-0 text-fg-subtle", i === activeIndex && "text-fg")}
                 aria-hidden
               />
               <span className="min-w-0 flex-1 truncate">{item.label}</span>
@@ -211,14 +211,14 @@ export function CommandButton({
       aria-label={compact ? "Buscar" : undefined}
       className={cn(
         "flex items-center gap-2.5 rounded-xl border border-border bg-surface text-[14px] text-fg-muted transition-colors hover:bg-surface-strong hover:text-fg",
-        compact ? "size-10 justify-center rounded-full" : "h-10 w-full px-3",
+        compact ? "size-10 justify-center" : "h-9 w-full px-2.5",
         className,
       )}
     >
       <Search className="size-4" aria-hidden />
       {compact ? null : (
         <>
-          <span className="flex-1 text-left">Buscar…</span>
+          <span className="flex-1 text-left">Buscar</span>
           <kbd className="rounded-md border border-border px-1.5 text-[11px]">⌘K</kbd>
         </>
       )}

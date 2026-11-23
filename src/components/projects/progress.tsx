@@ -22,8 +22,8 @@ export function ProgressBar({
         className="h-1.5 flex-1 overflow-hidden rounded-full bg-surface-strong"
       >
         <div
-          className="h-full rounded-full bg-accent transition-[width] duration-700 ease-[var(--ease-out)]"
-          style={{ width: `${pct}%` }}
+          className="h-full origin-left rounded-full bg-primary transition-transform duration-300 ease-[var(--ease-out)]"
+          style={{ transform: `scaleX(${pct / 100})` }}
         />
       </div>
       <span className="w-20 text-right text-[12px] text-fg-muted tabular-nums">

@@ -1,5 +1,6 @@
 "use client";
 
+import { TrackerIcon } from "./tracker-icon";
 import Link from "next/link";
 import { useMemo, useState, useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -115,12 +116,8 @@ export function TrackerWorkspace({
       </Link>
       <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div className="min-w-0">
-          <h1 className="text-[30px] leading-tight font-medium tracking-[-0.03em] break-words sm:text-[36px]">
-            {tracker.icon ? (
-              <span className="mr-2" aria-hidden>
-                {tracker.icon}
-              </span>
-            ) : null}
+          <h1 className="flex items-center gap-3 text-[28px] leading-[1.15] font-medium break-words sm:text-[34px]">
+            <TrackerIcon icon={tracker.icon} className="size-6 sm:size-7" />
             {tracker.name}
           </h1>
           {tracker.description ? (
@@ -135,7 +132,7 @@ export function TrackerWorkspace({
             <Plus className="size-4" aria-hidden /> Nuevo registro
           </Button>
           <Button
-            variant="glass"
+            variant="secondary"
             size="icon"
             onClick={() => setPropsOpen(true)}
             aria-label="Propiedades"
@@ -143,7 +140,7 @@ export function TrackerWorkspace({
             <ListPlus className="size-4" aria-hidden />
           </Button>
           <Button
-            variant="glass"
+            variant="secondary"
             size="icon"
             onClick={() => setImportOpen(true)}
             aria-label="Importar CSV o Excel"
@@ -151,7 +148,7 @@ export function TrackerWorkspace({
             <FileUp className="size-4" aria-hidden />
           </Button>
           <Button
-            variant="glass"
+            variant="secondary"
             size="icon"
             onClick={() => setSettingsOpen(true)}
             aria-label="Ajustes del tracker"
@@ -174,7 +171,7 @@ export function TrackerWorkspace({
             className={cn(
               "shrink-0 rounded-t-lg border-b-2 px-3 py-2 text-[14px] font-medium transition-colors",
               v.id === active.id
-                ? "border-accent text-fg"
+                ? "border-fg text-fg"
                 : "border-transparent text-fg-muted hover:text-fg",
             )}
           >
@@ -308,10 +305,10 @@ function TableBody(b: BodyProps) {
   const [, start] = useTransition();
   const toast = useToast();
   return (
-    <div className="glass overflow-x-auto rounded-[var(--radius-card)]">
+    <div className="card overflow-x-auto rounded-[var(--radius-card)]">
       <table className="w-full min-w-[560px] text-[14px]">
         <thead>
-          <tr className="border-b border-border text-left text-[12px] text-fg-muted uppercase">
+          <tr className="border-b border-border text-left text-[12px] text-fg-muted">
             {cols.map((p) => (
               <th
                 key={p.id}
@@ -419,7 +416,7 @@ function secondary(b: BodyProps, r: Row, max = 3) {
 
 function ListBody(b: BodyProps) {
   return (
-    <ul className="glass divide-y divide-border rounded-[var(--radius-card)]">
+    <ul className="card divide-y divide-border rounded-[var(--radius-card)]">
       {b.rows.map((r) => (
         <li key={r.id}>
           <button
@@ -450,7 +447,7 @@ function CardsBody(b: BodyProps) {
           <button
             type="button"
             onClick={() => b.onOpen(r.id)}
-            className="glass flex h-full w-full flex-col gap-2 rounded-[var(--radius-card)] p-4 text-left transition-transform hover:-translate-y-0.5"
+            className="card flex h-full w-full flex-col gap-2 rounded-[var(--radius-card)] p-4 text-left transition-colors hover:border-border-strong"
           >
             <span className="text-[16px] font-medium">{b.titleOf(r)}</span>
             <dl className="flex flex-col gap-1 text-[13px]">
@@ -507,7 +504,7 @@ function KanbanBody(b: BodyProps) {
               if (id) move(id, c.id);
             }}
             className={cn(
-              "glass flex w-72 shrink-0 flex-col gap-2 rounded-[var(--radius-card)] p-3",
+              "card flex w-72 shrink-0 flex-col gap-2 rounded-[var(--radius-card)] p-3",
               over === c.id && "ring-2 ring-ring",
             )}
           >
@@ -564,7 +561,7 @@ function CalendarBody(b: BodyProps) {
     <div className="flex flex-col gap-3">
       <div className="flex items-center gap-2">
         <Button
-          variant="glass"
+          variant="secondary"
           size="icon"
           onClick={() => setAnchor(addMonths(anchor, -1))}
           aria-label="Mes anterior"
@@ -572,7 +569,7 @@ function CalendarBody(b: BodyProps) {
           <ChevronLeft className="size-4" aria-hidden />
         </Button>
         <Button
-          variant="glass"
+          variant="secondary"
           size="icon"
           onClick={() => setAnchor(addMonths(anchor, 1))}
           aria-label="Mes siguiente"
@@ -588,13 +585,13 @@ function CalendarBody(b: BodyProps) {
           Sin propiedad de fecha como eje temporal: se usa la fecha de creación.
         </p>
       ) : null}
-      <div className="glass grid grid-cols-7 overflow-hidden rounded-[var(--radius-card)]">
+      <div className="card grid grid-cols-7 overflow-hidden rounded-[var(--radius-card)]">
         {days.slice(0, 7).map((d) => (
           <div
             key={`h${d}`}
-            className="border-b border-border py-2 text-center text-[12px] text-fg-subtle uppercase"
+            className="border-b border-border py-2 text-center text-[12px] text-fg-subtle"
           >
-            {formatDay(d, { weekday: "short" }).replace(".", "")}
+            {capitalize(formatDay(d, { weekday: "short" }).replace(".", ""))}
           </div>
         ))}
         {days.map((d) => (
@@ -607,11 +604,12 @@ function CalendarBody(b: BodyProps) {
           >
             <span
               className={cn(
-                "grid size-6 place-items-center rounded-full text-[12px]",
-                d === b.today && "bg-accent font-semibold text-accent-fg",
+                "inline-flex h-6 items-center gap-1.5 px-1 text-[12px] tabular-nums",
+                d === b.today ? "font-medium text-fg" : "text-fg-muted",
               )}
             >
               {Number(d.slice(8))}
+              {d === b.today ? <span className="now-dot" aria-hidden /> : null}
             </span>
             {(byDay.get(d) ?? []).slice(0, 3).map((r) => (
               <button
@@ -646,32 +644,39 @@ function ChartBody(b: BodyProps) {
   const title = chartTitle(spec);
   const unitPerPoint = bucket === "day" ? 7 : 1;
   const trendLabel = bucket === "day" ? "por semana" : bucket === "week" ? "por semana" : "por mes";
+  const shortDay = (d: string) => formatDay(d, { day: "numeric", month: "short" });
 
   return (
     <div className="flex flex-col gap-4">
       {s ? (
-        <dl className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+        <dl className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           {[
-            ["Último", fmt(s.last)],
-            ["Media", fmt(s.avg)],
-            ["Mínimo", fmt(s.min)],
-            ["Máximo", fmt(s.max)],
-            ["Cambio", `${s.change > 0 ? "+" : ""}${fmt(s.change)}`],
+            ["Último", fmt(s.last), shortDay(points[points.length - 1].x)],
+            [
+              "Cambio",
+              `${s.change > 0 ? "+" : ""}${fmt(s.change)}`,
+              `desde el ${shortDay(points[0].x)}`,
+            ],
+            ["Media", fmt(s.avg), `mín. ${fmt(s.min)} · máx. ${fmt(s.max)}`],
             [
               `Tendencia ${trendLabel}`,
               s.slopePerDay === null
                 ? "—"
                 : `${s.slopePerDay > 0 ? "+" : ""}${fmt(s.slopePerDay * (bucket === "month" ? 30.4 : unitPerPoint))}`,
+              s.slopePerDay === null ? "con 3 puntos o más" : "estimación lineal",
             ],
-          ].map(([label, value]) => (
-            <div key={label} className="glass rounded-2xl p-3">
-              <dt className="text-[12px] text-fg-muted">{label}</dt>
-              <dd className="text-[20px] font-medium tabular-nums">{value}</dd>
+          ].map(([label, value, meta]) => (
+            <div key={label} className="card rounded-[var(--radius-card)] p-4">
+              <dt className="text-[13px] text-fg-muted">{label}</dt>
+              <dd className="mt-1 text-[24px] leading-none font-medium tabular-nums sm:text-[28px]">
+                {value}
+              </dd>
+              <dd className="mt-2 text-[12px] text-fg-subtle tabular-nums">{meta}</dd>
             </div>
           ))}
         </dl>
       ) : null}
-      <div className="glass rounded-[var(--radius-card)] p-4">
+      <div className="card rounded-[var(--radius-card)] p-4 sm:p-5">
         <TrackerChart points={points} kind={kind} title={title} format={fmt} />
       </div>
       {proj ? (
@@ -684,7 +689,7 @@ function ChartBody(b: BodyProps) {
         </p>
       ) : points.length > 0 && points.length < 5 ? (
         <p className="text-[13px] text-fg-subtle">
-          Con 5 o más puntos verás una estimación de tendencia.
+          Con 5 o más puntos verás una estimación de tendencia
         </p>
       ) : null}
     </div>

@@ -16,38 +16,39 @@ export const metadata: Metadata = { title: "Ajustes" };
 export default function SettingsPage() {
   return (
     <div className="flex flex-col gap-8">
-      <header className="animate-rise">
-        <h1 className="text-[34px] leading-tight font-medium tracking-[-0.03em] sm:text-[44px]">
-          Ajustes
-        </h1>
+      <header>
+        <h1 className="text-[28px] leading-[1.15] font-medium sm:text-[34px]">Ajustes</h1>
         <p className="mt-1 text-[15px] text-fg-muted">
           Tu perfil, la apariencia y la seguridad de tu cuenta.
         </p>
       </header>
 
-      <Section title="Perfil" description="Así te saluda TRACKY y así calcula tus días.">
+      <Section
+        title="Perfil"
+        description="Tu nombre y la zona horaria con la que se cuentan tus días"
+      >
         <Suspense fallback={<FormSkeleton fields={2} />}>
           <Profile />
         </Suspense>
       </Section>
 
-      <Section title="Apariencia" description="Se guarda en este dispositivo.">
+      <Section title="Apariencia" description="Se guarda en este dispositivo">
         <ThemeToggle />
       </Section>
 
-      <Section title="Seguridad" description="Gestiona el acceso a tu cuenta.">
+      <Section title="Seguridad" description="El acceso a tu cuenta">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <Suspense fallback={<div className="h-5 w-48 rounded bg-surface-strong" />}>
             <AccountEmail />
           </Suspense>
-          <Link href={ROUTES.updatePassword} className={buttonClasses({ variant: "glass" })}>
+          <Link href={ROUTES.updatePassword} className={buttonClasses({ variant: "secondary" })}>
             <KeyRound className="size-4" aria-hidden />
             Cambiar contraseña
           </Link>
         </div>
       </Section>
 
-      <Section title="Sesión" description="Cierra la sesión en este dispositivo.">
+      <Section title="Sesión" description="Cierra la sesión en este dispositivo">
         <SignOutButton variant="danger" />
       </Section>
     </div>
@@ -64,9 +65,9 @@ function Section({
   children: ReactNode;
 }) {
   return (
-    <Card className="animate-rise p-6 sm:p-7">
+    <Card className="p-6">
       <div className="mb-5">
-        <h2 className="text-[18px] font-medium tracking-[-0.015em]">{title}</h2>
+        <h2 className="text-[18px] font-medium">{title}</h2>
         <p className="mt-0.5 text-[14px] text-fg-muted">{description}</p>
       </div>
       {children}

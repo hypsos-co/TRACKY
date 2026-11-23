@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { TrackerIcon } from "@/components/trackers/tracker-icon";
 import { count } from "@/lib/utils";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -16,7 +17,10 @@ export default function TrackersPage() {
     <Suspense
       fallback={
         <div className="flex flex-col gap-6">
-          <PageHeader title="Trackers" description="Mide lo que te importa." />
+          <PageHeader
+            title="Trackers"
+            description="Peso, sueño, gastos, lecturas o lo que quieras medir"
+          />
           <GridSkeleton />
         </div>
       }
@@ -33,7 +37,7 @@ async function Trackers() {
     <div className="flex flex-col gap-6">
       <PageHeader
         title="Trackers"
-        description="Mide lo que te importa."
+        description="Peso, sueño, gastos, lecturas o lo que quieras medir"
         actions={<NewTrackerButton trackers={trackers} />}
       />
       {trackers.length ? (
@@ -44,19 +48,15 @@ async function Trackers() {
                 href={`/trackers/${t.id}`}
                 className="block h-full rounded-[var(--radius-card)]"
               >
-                <Card className="flex h-full flex-col gap-2 p-5 transition-transform duration-300 ease-[var(--ease-out)] hover:-translate-y-0.5">
-                  <h2 className="text-[17px] font-medium break-words">
-                    {t.icon ? (
-                      <span aria-hidden className="mr-1.5">
-                        {t.icon}
-                      </span>
-                    ) : null}
+                <Card className="flex h-full flex-col gap-2 p-5 transition-colors hover:border-border-strong">
+                  <h2 className="flex items-center gap-2.5 text-[16px] font-medium break-words">
+                    <TrackerIcon icon={t.icon} />
                     {t.name}
                   </h2>
                   {t.description ? (
                     <p className="line-clamp-2 text-[14px] text-fg-muted">{t.description}</p>
                   ) : null}
-                  <p className="mt-auto text-[13px] text-fg-subtle">
+                  <p className="mt-auto text-[12px] text-fg-subtle tabular-nums">
                     {count(t.entries, "registro")}
                   </p>
                 </Card>
@@ -67,7 +67,7 @@ async function Trackers() {
       ) : (
         <EmptyState title="Crea tu primer tracker" action={<NewTrackerButton trackers={[]} />}>
           Empieza con una plantilla (peso, sueño, gastos, lecturas…) o diseña el tuyo con las
-          propiedades que quieras.
+          propiedades que quieras
         </EmptyState>
       )}
     </div>

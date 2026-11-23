@@ -1,3 +1,4 @@
+import type { TrackerIconKey } from "./icons";
 import type { PropertyConfig, PropertyType } from "./properties";
 
 type TemplateProperty = {
@@ -15,7 +16,7 @@ type TemplateView = {
 export type TrackerTemplate = {
   key: string;
   name: string;
-  icon: string;
+  icon: TrackerIconKey;
   description: string;
   properties: TemplateProperty[];
   /** name of the date property used as time axis */
@@ -30,8 +31,8 @@ export const TRACKER_TEMPLATES: TrackerTemplate[] = [
   {
     key: "weight",
     name: "Peso corporal",
-    icon: "⚖️",
-    description: "Peso y % de grasa con su evolución.",
+    icon: "scale",
+    description: "Peso y % de grasa con su evolución",
     properties: [
       { name: "Fecha", type: "date", isTitle: true, required: true },
       { name: "Peso", type: "decimal", config: { decimals: 1, unit: "kg" }, required: true },
@@ -51,8 +52,8 @@ export const TRACKER_TEMPLATES: TrackerTemplate[] = [
   {
     key: "water",
     name: "Hidratación",
-    icon: "💧",
-    description: "Vasos de agua al día y si llegaste al objetivo.",
+    icon: "droplet",
+    description: "Vasos de agua al día y si llegaste al objetivo",
     properties: [
       { name: "Fecha", type: "date", isTitle: true, required: true },
       { name: "Vasos", type: "integer", required: true },
@@ -71,8 +72,8 @@ export const TRACKER_TEMPLATES: TrackerTemplate[] = [
   {
     key: "sleep",
     name: "Sueño",
-    icon: "🌙",
-    description: "Horas dormidas y calidad del descanso.",
+    icon: "moon",
+    description: "Horas dormidas y calidad del descanso",
     properties: [
       { name: "Fecha", type: "date", isTitle: true, required: true },
       { name: "Duración", type: "duration", required: true },
@@ -96,8 +97,8 @@ export const TRACKER_TEMPLATES: TrackerTemplate[] = [
   {
     key: "expenses",
     name: "Gastos",
-    icon: "💳",
-    description: "Gastos por categoría y total mensual.",
+    icon: "wallet",
+    description: "Gastos por categoría y total mensual",
     properties: [
       { name: "Concepto", type: "text", isTitle: true, required: true },
       { name: "Fecha", type: "date", required: true },
@@ -122,8 +123,8 @@ export const TRACKER_TEMPLATES: TrackerTemplate[] = [
   {
     key: "reading",
     name: "Lecturas",
-    icon: "📚",
-    description: "Libros por leer, leyendo y leídos.",
+    icon: "book-open",
+    description: "Libros por leer, leyendo y leídos",
     properties: [
       { name: "Título", type: "text", isTitle: true, required: true },
       { name: "Autor", type: "text" },
@@ -141,8 +142,8 @@ export const TRACKER_TEMPLATES: TrackerTemplate[] = [
   {
     key: "workouts",
     name: "Entrenamientos",
-    icon: "🏋️",
-    description: "Sesiones, duración y esfuerzo.",
+    icon: "dumbbell",
+    description: "Sesiones, duración y esfuerzo",
     properties: [
       { name: "Fecha", type: "date", isTitle: true, required: true },
       {
@@ -168,8 +169,8 @@ export const TRACKER_TEMPLATES: TrackerTemplate[] = [
   {
     key: "study",
     name: "Horas de estudio",
-    icon: "🎓",
-    description: "Tiempo de estudio por materia.",
+    icon: "graduation-cap",
+    description: "Tiempo de estudio por materia",
     properties: [
       { name: "Fecha", type: "date", isTitle: true, required: true },
       {
@@ -192,8 +193,8 @@ export const TRACKER_TEMPLATES: TrackerTemplate[] = [
   {
     key: "content",
     name: "Publicaciones",
-    icon: "📱",
-    description: "Publicaciones en redes y sus resultados.",
+    icon: "smartphone",
+    description: "Publicaciones en redes y sus resultados",
     properties: [
       { name: "Título", type: "text", isTitle: true, required: true },
       {

@@ -49,7 +49,7 @@ async function Dashboard({
   searchParams: PageProps<"/dashboard">["searchParams"];
 }) {
   const [ctx, params] = await Promise.all([getContext(), searchParams]);
-  const { user, profile, workspace, today, timeZone } = ctx;
+  const { user, workspace, today, timeZone } = ctx;
   const grid = monthGrid(today);
   const [dashboard, tasks, projects, week, month, trackers] = await Promise.all([
     getDefaultDashboard(user.id),
@@ -100,25 +100,23 @@ async function Dashboard({
       id: w.id,
       type: w.type,
       size: w.size,
-      title: tracker ? `${tracker.icon ? `${tracker.icon} ` : ""}${tracker.name}` : undefined,
+      title: tracker?.name,
+      icon: tracker ? (tracker.icon ?? "") : undefined,
       node: render(w.type, w.config),
     };
   });
-  const name = profile.display_name ?? user.email.split("@")[0];
-
   return (
     <div className="flex flex-col gap-6">
-      {params.password === "updated" ? <Alert tone="success">Contraseña actualizada.</Alert> : null}
-      <header className="animate-rise">
-        <p className="text-[14px] font-medium text-fg-subtle">
-          {capitalize(formatDay(today, { weekday: "long", day: "numeric", month: "long" }))} ·{" "}
-          {workspace.name}
-        </p>
-        <h1 className="mt-1 text-[34px] leading-tight font-medium tracking-[-0.03em] text-balance sm:text-[44px]">
-          Hola, {name}
-        </h1>
-      </header>
+      {params.password === "updated" ? <Alert tone="success">Contraseña actualizada</Alert> : null}
       <DashboardGrid
+        header={
+          <header className="min-w-0">
+            <p className="text-[13px] text-fg-subtle">{workspace.name}</p>
+            <h1 className="mt-1 text-[28px] leading-[1.15] font-medium sm:text-[34px]">
+              {capitalize(formatDay(today, { weekday: "long", day: "numeric", month: "long" }))}
+            </h1>
+          </header>
+        }
         items={items}
         trackers={trackers.map((t) => ({ id: t.id, name: t.name, icon: t.icon }))}
       />

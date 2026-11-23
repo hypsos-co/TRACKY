@@ -72,7 +72,7 @@ export function TaskFilters({
         <button
           type="button"
           onClick={() => router.replace(pathname, { scroll: false })}
-          className="flex h-11 items-center gap-1.5 rounded-full px-3 text-[14px] text-fg-muted hover:bg-surface hover:text-fg"
+          className="flex h-11 items-center gap-1.5 rounded-[var(--radius-field)] px-3 text-[14px] text-fg-muted hover:bg-surface hover:text-fg"
         >
           <X className="size-4" aria-hidden /> Quitar filtros
         </button>

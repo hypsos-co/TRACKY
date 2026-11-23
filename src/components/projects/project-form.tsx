@@ -33,7 +33,7 @@ export function ProjectFormButton({ project }: { project?: Initial }) {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <Button variant={project ? "glass" : "accent"} onClick={() => setOpen(true)}>
+      <Button variant={project ? "secondary" : "accent"} onClick={() => setOpen(true)}>
         {project ? (
           <Pencil className="size-4" aria-hidden />
         ) : (

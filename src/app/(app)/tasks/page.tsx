@@ -15,10 +15,7 @@ export const metadata: Metadata = { title: "Tareas" };
 export default function TasksPage({ searchParams }: PageProps<"/tasks">) {
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader
-        title="Tareas"
-        description="Todo lo que tienes entre manos, ordenado por fecha."
-      />
+      <PageHeader title="Tareas" description="Todo lo que tienes entre manos, por fecha" />
       <Suspense fallback={<ListSkeleton />}>
         <Tasks searchParams={searchParams} />
       </Suspense>

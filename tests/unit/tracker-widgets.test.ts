@@ -74,7 +74,12 @@ describe("tracker widget data", () => {
   it("summarises the latest value, its change and the newest entry by date", () => {
     const data = buildTrackerWidget(tracker, "2026-11-23");
     expect(data.points.map((p) => p.x)).toEqual(["2026-11-01", "2026-11-05", "2026-11-10"]);
-    expect(data.latest).toEqual({ value: 80.5, day: "2026-11-10", previous: 81 });
+    expect(data.latest).toEqual({
+      value: 80.5,
+      day: "2026-11-10",
+      previous: 81,
+      previousDay: "2026-11-05",
+    });
     expect(data.lastEntry).toEqual({ title: "c", day: "2026-11-10" });
     expect(data.entries).toBe(3);
   });
@@ -91,5 +96,19 @@ describe("widget catalogue", () => {
     expect(Object.keys(WIDGET_TYPES)).toContain("tracker_latest");
     expect(widgetTrackerId({ trackerId: "abc" })).toBe("abc");
     expect(widgetTrackerId({ trackerId: 3 })).toBeNull();
+  });
+});
+
+describe("tracker line icons", () => {
+  it("keeps keys, maps legacy emoji and falls back to the default", async () => {
+    const { trackerIconKey, TRACKER_ICON_KEYS } = await import("@/lib/trackers/icons");
+    const { TRACKER_TEMPLATES } = await import("@/lib/trackers/templates");
+    expect(trackerIconKey("scale")).toBe("scale");
+    expect(trackerIconKey("⚖️")).toBe("scale");
+    expect(trackerIconKey("⚖")).toBe("scale");
+    expect(trackerIconKey("📚")).toBe("book-open");
+    expect(trackerIconKey("🦄")).toBe("activity");
+    expect(trackerIconKey(null)).toBe("activity");
+    for (const t of TRACKER_TEMPLATES) expect(TRACKER_ICON_KEYS).toContain(t.icon);
   });
 });

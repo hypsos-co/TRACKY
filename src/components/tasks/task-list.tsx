@@ -28,14 +28,14 @@ export function TaskList({
           <section key={g.key} aria-labelledby={`sec-${g.key}`}>
             <h2
               id={`sec-${g.key}`}
-              className="mb-1 flex items-center gap-2 px-3 text-[13px] font-medium tracking-[0.04em] text-fg-subtle uppercase"
+              className="mb-1 flex items-center gap-2 px-3 text-[14px] font-medium text-fg-muted"
             >
               {isDone ? (
                 <button
                   type="button"
                   onClick={() => setShowDone((s) => !s)}
                   aria-expanded={showDone}
-                  className="flex items-center gap-1.5 uppercase hover:text-fg"
+                  className="flex items-center gap-1.5 hover:text-fg"
                 >
                   <ChevronRight
                     className={cn("size-4 transition-transform", showDone && "rotate-90")}
@@ -46,7 +46,9 @@ export function TaskList({
               ) : (
                 <span className={cn(g.key === "overdue" && "text-danger-text")}>{g.label}</span>
               )}
-              <span className="text-fg-subtle/80">{g.tasks.length}</span>
+              <span className="text-[12px] font-normal text-fg-subtle tabular-nums">
+                {g.tasks.length}
+              </span>
             </h2>
             {!isDone || showDone ? (
               <ul className="flex flex-col">

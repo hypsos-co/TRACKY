@@ -96,11 +96,9 @@ export function PageHeader({
   actions?: React.ReactNode;
 }) {
   return (
-    <header className="flex animate-rise flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
       <div>
-        <h1 className="text-[32px] leading-tight font-medium tracking-[-0.03em] sm:text-[40px]">
-          {title}
-        </h1>
+        <h1 className="text-[28px] leading-[1.15] font-medium sm:text-[34px]">{title}</h1>
         {description ? <p className="mt-1 text-[15px] text-fg-muted">{description}</p> : null}
       </div>
       {actions ? <div className="flex flex-wrap items-center gap-2">{actions}</div> : null}

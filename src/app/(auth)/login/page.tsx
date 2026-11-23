@@ -9,8 +9,8 @@ export const metadata: Metadata = { title: "Iniciar sesión" };
 export default function LoginPage({ searchParams }: PageProps<"/login">) {
   return (
     <AuthShell
-      title="Bienvenido de nuevo"
-      subtitle="Entra para seguir donde lo dejaste."
+      title="Iniciar sesión"
+      subtitle="Con tu email y tu contraseña"
       footer={
         <>
           ¿Aún no tienes cuenta? <TextLink href={ROUTES.signUp}>Crea una</TextLink>
