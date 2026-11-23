@@ -4,13 +4,13 @@ Un tracker es una base de datos propia, al estilo de Notion: tú decides qué pr
 
 ## 1. Modelo
 
-| Tabla                 | Qué guarda                                                                                                   |
-| --------------------- | ------------------------------------------------------------------------------------------------------------ |
-| `trackers`            | Nombre, icono, descripción, plantilla de origen y la propiedad que hace de **fecha** (eje temporal)          |
-| `tracker_properties`  | Propiedades tipadas (`tracker_property_type`), configuración JSON acotada, orden, una sola de **título**     |
-| `tracker_entries`     | Registros: `values` es un objeto JSON indexado por **id de propiedad** (≤ 32 KB)                             |
-| `tracker_entry_links` | Relaciones entre registros (propiedad `relation`), con FK reales y trigger de mismo workspace                |
-| `tracker_views`       | Vistas guardadas: `table`, `list`, `cards`, `kanban`, `calendar`, `chart` + su configuración (filtros, etc.) |
+| Tabla                 | Qué guarda                                                                                                                                          |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `trackers`            | Nombre, icono de línea (clave de `src/lib/trackers/icons.ts`), descripción, plantilla de origen y la propiedad que hace de **fecha** (eje temporal) |
+| `tracker_properties`  | Propiedades tipadas (`tracker_property_type`), configuración JSON acotada, orden, una sola de **título**                                            |
+| `tracker_entries`     | Registros: `values` es un objeto JSON indexado por **id de propiedad** (≤ 32 KB)                                                                    |
+| `tracker_entry_links` | Relaciones entre registros (propiedad `relation`), con FK reales y trigger de mismo workspace                                                       |
+| `tracker_views`       | Vistas guardadas: `table`, `list`, `cards`, `kanban`, `calendar`, `chart` + su configuración (filtros, etc.)                                        |
 
 RLS: los miembros del workspace leen; `owner/admin/member` escriben (`private.tracker_role_ok`). Detalle en `DATABASE.md`; pruebas en `supabase/tests/database/trackers.test.sql`.
 

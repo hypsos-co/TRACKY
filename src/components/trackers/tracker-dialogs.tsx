@@ -1,5 +1,7 @@
 "use client";
 
+import { trackerIconKey, type TrackerIconKey } from "@/lib/trackers/icons";
+import { IconPicker } from "./icon-picker";
 import { useMemo, useState, useTransition } from "react";
 import { count } from "@/lib/utils";
 import { useRouter } from "next/navigation";
@@ -127,7 +129,7 @@ function EntryForm({
           />
         ))}
       {formulas.length ? (
-        <dl className="grid grid-cols-2 gap-2 rounded-2xl bg-surface p-3 text-[13px]">
+        <dl className="grid grid-cols-2 gap-2 rounded-[var(--radius-field)] bg-surface p-3 text-[13px]">
           {formulas.map((p) => (
             <div key={p.id}>
               <dt className="text-fg-muted">{p.name}</dt>
@@ -197,7 +199,7 @@ export function PropertiesDialog({
       open={open}
       onClose={onClose}
       title="Propiedades"
-      description="Define qué guardas en cada registro."
+      description="Qué guardas en cada registro"
       variant="sheet"
     >
       {editing ? (
@@ -262,7 +264,7 @@ export function PropertiesDialog({
               </li>
             ))}
           </ul>
-          <Button variant="glass" onClick={() => setEditing("new")}>
+          <Button variant="secondary" onClick={() => setEditing("new")}>
             <Plus className="size-4" aria-hidden /> Nueva propiedad
           </Button>
         </div>
@@ -317,7 +319,7 @@ function PropertyForm({
       ) {
         await updateTracker(tracker.id, {
           name: tracker.name,
-          icon: tracker.icon,
+          icon: trackerIconKey(tracker.icon),
           description: tracker.description,
           datePropertyId: isAxis ? res.data.id : null,
         });
@@ -702,7 +704,7 @@ function ViewForm({
             ))}
           </Select>
         ) : (
-          <Alert tone="info">Para un kanban añade una propiedad de tipo Selección o Estado.</Alert>
+          <Alert tone="info">Para un kanban añade una propiedad de tipo Selección o Estado</Alert>
         )
       ) : null}
       {type === "table" || type === "list" || type === "cards" ? (
@@ -785,7 +787,7 @@ export function TrackerSettingsDialog({
 
 function TrackerSettingsForm({ tracker, onClose }: { tracker: TrackerFull; onClose: () => void }) {
   const [name, setName] = useState(tracker.name);
-  const [icon, setIcon] = useState(tracker.icon ?? "");
+  const [icon, setIcon] = useState<TrackerIconKey>(trackerIconKey(tracker.icon));
   const [description, setDescription] = useState(tracker.description ?? "");
   const [confirm, setConfirm] = useState(false);
   const [error, setError] = useState<string>();
@@ -801,7 +803,7 @@ function TrackerSettingsForm({ tracker, onClose }: { tracker: TrackerFull; onClo
         start(async () => {
           const res = await updateTracker(tracker.id, {
             name,
-            icon: icon || null,
+            icon,
             description: description || null,
             datePropertyId: tracker.date_property_id,
           });
@@ -812,21 +814,13 @@ function TrackerSettingsForm({ tracker, onClose }: { tracker: TrackerFull; onClo
       }}
     >
       {error ? <Alert tone="error">{error}</Alert> : null}
-      <div className="grid grid-cols-[5rem_1fr] gap-3">
-        <Field
-          label="Icono"
-          value={icon}
-          onChange={(e) => setIcon(e.target.value)}
-          maxLength={4}
-          placeholder="📈"
-        />
-        <Field
-          label="Nombre"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          maxLength={120}
-        />
-      </div>
+      <Field
+        label="Nombre"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        maxLength={120}
+      />
+      <IconPicker value={icon} onChange={setIcon} />
       <Textarea
         label="Descripción"
         value={description}

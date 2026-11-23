@@ -12,7 +12,7 @@ import {
   VIEWS,
   type CalendarViewKind,
 } from "@/lib/calendar/range";
-import { addDays, formatDay, monthGrid, type ISODate } from "@/lib/dates";
+import { addDays, capitalize, formatDay, monthGrid, type ISODate } from "@/lib/dates";
 import { buttonClasses, Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/toast";
 import { cn } from "@/lib/utils";
@@ -107,48 +107,49 @@ export function CalendarView({
           <Link
             href={href(view, shift(view, anchor, -1))}
             aria-label="Anterior"
-            className={buttonClasses({ variant: "glass", size: "icon" })}
+            className={buttonClasses({ variant: "secondary", size: "icon" })}
           >
             <ChevronLeft className="size-4" aria-hidden />
           </Link>
           <Link
             href={href(view, today)}
-            className={buttonClasses({ variant: "glass", size: "sm" })}
+            className={buttonClasses({ variant: "secondary", size: "sm" })}
           >
             Hoy
           </Link>
           <Link
             href={href(view, shift(view, anchor, 1))}
             aria-label="Siguiente"
-            className={buttonClasses({ variant: "glass", size: "icon" })}
+            className={buttonClasses({ variant: "secondary", size: "icon" })}
           >
             <ChevronRight className="size-4" aria-hidden />
           </Link>
-          <h2 className="ml-2 text-[20px] font-medium tracking-[-0.02em]" aria-live="polite">
+          <h2 className="ml-2 text-[20px] font-medium" aria-live="polite">
             {titleFor(view, anchor)}
           </h2>
         </div>
         <div className="flex items-center gap-2">
-          <nav aria-label="Vista del calendario" className="glass inline-flex rounded-full p-1">
+          <nav
+            aria-label="Vista del calendario"
+            className="inline-flex rounded-xl border border-border bg-surface p-1"
+          >
             {VIEWS.map((v) => (
               <Link
                 key={v}
                 href={href(v, anchor)}
                 aria-current={v === view ? "page" : undefined}
                 className={cn(
-                  "rounded-full px-3.5 py-1.5 text-[13px] font-medium transition-colors",
-                  v === view ? "bg-accent text-accent-fg" : "text-fg-muted hover:text-fg",
+                  "rounded-lg px-3 py-1.5 text-[13px] font-medium transition-colors",
+                  v === view
+                    ? "bg-surface-strong text-fg shadow-[var(--highlight)]"
+                    : "text-fg-muted hover:text-fg",
                 )}
               >
                 {VIEW_LABELS[v]}
               </Link>
             ))}
           </nav>
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={() => setDraft(newDraft(view === "day" ? anchor : today))}
-          >
+          <Button size="sm" onClick={() => setDraft(newDraft(view === "day" ? anchor : today))}>
             <Plus className="size-4" aria-hidden /> Nuevo evento
           </Button>
         </div>
@@ -239,14 +240,11 @@ function MonthGrid({
   const month = anchor.slice(0, 7);
   const weekdays = days.slice(0, 7).map((d) => formatDay(d, { weekday: "short" }));
   return (
-    <div className="glass overflow-hidden rounded-[var(--radius-card)]">
+    <div className="card overflow-hidden rounded-[var(--radius-card)]">
       <div className="grid grid-cols-7 border-b border-border">
         {weekdays.map((w) => (
-          <div
-            key={w}
-            className="py-2 text-center text-[12px] font-medium text-fg-subtle uppercase"
-          >
-            {w.replace(".", "")}
+          <div key={w} className="py-2 text-center text-[12px] text-fg-subtle">
+            {capitalize(w.replace(".", ""))}
           </div>
         ))}
       </div>
@@ -272,13 +270,13 @@ function MonthGrid({
                 onClick={(e) => e.stopPropagation()}
                 aria-label={formatDay(d, { weekday: "long", day: "numeric", month: "long" })}
                 className={cn(
-                  "mb-1 grid size-7 place-items-center rounded-full text-[13px]",
-                  d === today
-                    ? "bg-accent font-semibold text-accent-fg"
-                    : "text-fg-muted hover:bg-surface-strong",
+                  "mb-1 inline-flex h-7 items-center gap-1.5 rounded-md px-1.5 text-[13px] tabular-nums",
+                  d === today ? "font-medium text-fg" : "text-fg-muted hover:bg-surface-strong",
                 )}
+                aria-current={d === today ? "date" : undefined}
               >
                 {Number(d.slice(8))}
+                {d === today ? <span className="now-dot" aria-hidden /> : null}
               </Link>
               <div className="flex flex-col gap-0.5">
                 {items.slice(0, 3).map((it) =>
@@ -330,7 +328,7 @@ function YearGrid({
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {Array.from({ length: 12 }, (_, m) => `${year}-${pad(m + 1)}-01`).map((first) => (
-        <div key={first} className="glass rounded-[var(--radius-card)] p-4">
+        <div key={first} className="card rounded-[var(--radius-card)] p-4">
           <Link
             href={href("month", first)}
             className="text-[15px] font-medium capitalize hover:text-primary-text"
@@ -346,14 +344,17 @@ function YearGrid({
                   key={d}
                   href={href("day", d)}
                   className={cn(
-                    "relative mx-auto grid size-6 place-items-center rounded-full",
+                    "relative mx-auto grid size-6 place-items-center rounded-md tabular-nums",
                     d === today
-                      ? "bg-accent font-semibold text-accent-fg"
+                      ? "bg-surface-strong font-medium text-fg"
                       : "text-fg-muted hover:bg-surface-strong",
                   )}
+                  aria-current={d === today ? "date" : undefined}
                 >
                   {Number(d.slice(8))}
-                  {busy && d !== today ? (
+                  {d === today ? (
+                    <span aria-hidden className="now-dot absolute -bottom-0.5" />
+                  ) : busy ? (
                     <span
                       aria-hidden
                       className="absolute bottom-0 size-1 rounded-full bg-primary-text"
@@ -454,7 +455,7 @@ function TimeGrid({
   }
 
   return (
-    <div className="glass overflow-hidden rounded-[var(--radius-card)]">
+    <div className="card overflow-hidden rounded-[var(--radius-card)]">
       <div className="overflow-x-auto">
         <div style={{ minWidth: days.length > 1 ? 640 : undefined }}>
           {/* Day headers + all-day lane */}
@@ -466,16 +467,12 @@ function TimeGrid({
             {days.map((d) => (
               <div key={d} className="border-l border-border px-1.5 py-2">
                 <Link href={href("day", d)} className="flex items-baseline gap-1.5">
-                  <span className="text-[12px] text-fg-subtle uppercase">
-                    {formatDay(d, { weekday: "short" }).replace(".", "")}
+                  <span className="text-[12px] text-fg-subtle">
+                    {capitalize(formatDay(d, { weekday: "short" }).replace(".", ""))}
                   </span>
-                  <span
-                    className={cn(
-                      "text-[16px] font-medium",
-                      d === today && "rounded-full bg-accent px-2 text-accent-fg",
-                    )}
-                  >
+                  <span className="inline-flex items-center gap-1.5 text-[16px] font-medium tabular-nums">
                     {Number(d.slice(8))}
+                    {d === today ? <span className="now-dot" aria-hidden /> : null}
                   </span>
                 </Link>
                 <div className="mt-1 flex flex-col gap-0.5">
@@ -568,7 +565,7 @@ function TimeGrid({
                         className={cn(
                           "absolute z-20 touch-none overflow-hidden rounded-lg border border-primary/40 bg-primary/25 px-2 py-1 text-left text-[12px] leading-tight backdrop-blur-sm transition-shadow select-none",
                           isDragging
-                            ? "cursor-grabbing shadow-xl ring-2 ring-ring"
+                            ? "cursor-grabbing shadow-[var(--shadow-float)] ring-2 ring-ring"
                             : "cursor-grab hover:bg-primary/35",
                         )}
                         style={{

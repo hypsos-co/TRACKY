@@ -101,8 +101,8 @@ export function ImportDialog({
     >
       <div className="flex flex-col gap-4 pb-2">
         {!sheet ? (
-          <label className="flex cursor-pointer flex-col items-center gap-2 rounded-2xl border border-dashed border-border-strong p-8 text-center hover:bg-surface">
-            <FileUp className="size-6 text-accent" aria-hidden />
+          <label className="flex cursor-pointer flex-col items-center gap-2 rounded-[var(--radius-field)] border border-dashed border-border-strong p-8 text-center hover:bg-surface">
+            <FileUp className="size-5 text-fg-muted" aria-hidden />
             <span className="font-medium">Elegir archivo</span>
             <span className="text-[13px] text-fg-muted">
               .csv o .xlsx · máximo 5 MB y 5000 filas

@@ -6,7 +6,8 @@ test.describe("authentication (real Supabase)", () => {
     const email = uniqueEmail("flow");
     await signUp(page, { name: "Ana García", email });
 
-    await expect(page.getByRole("heading", { level: 1, name: "Hola, Ana García" })).toBeVisible();
+    // The dashboard is titled by the day (no greeting); the name shows in the account link.
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     await expect(page.getByRole("region", { name: "Tareas de hoy" })).toBeVisible();
     await expectAccessible(page);
 
@@ -64,7 +65,9 @@ test.describe("authentication (real Supabase)", () => {
     await expect(page.getByLabel("Zona horaria")).toHaveValue("Europe/Madrid");
 
     await page.goto("/dashboard");
-    await expect(page.getByRole("heading", { level: 1, name: "Hola, Marta R." })).toBeVisible();
+    // The sidebar account link carries the name (the sidebar is desktop-only).
+    if (!test.info().project.name.includes("mobile"))
+      await expect(page.getByRole("link", { name: /Marta R\./ })).toBeVisible();
   });
 
   test("profile form rejects an empty name", async ({ page }) => {

@@ -7,7 +7,7 @@ import { ROUTES } from "@/lib/routes";
  * (Activity-preserved) signed-in page survives. Works without JavaScript.
  */
 export function SignOutButton({
-  variant = "glass",
+  variant = "secondary",
   size = "md",
   className,
 }: Pick<ButtonProps, "variant" | "size" | "className">) {

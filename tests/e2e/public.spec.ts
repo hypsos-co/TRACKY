@@ -2,9 +2,13 @@ import { expect, test } from "@playwright/test";
 import { expectAccessible } from "./helpers";
 
 test.describe("public pages", () => {
-  test("landing shows the brand and both calls to action", async ({ page }) => {
+  test("landing says what TRACKY does and offers both entry points", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByRole("heading", { level: 1, name: "TRACKY." })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { level: 1, name: "Tu día, tus tareas y lo que mides" }),
+    ).toBeVisible();
+    await expect(page.getByRole("link", { name: "TRACKY, inicio" })).toBeVisible();
+    await expect(page.getByText("Vista previa con datos de ejemplo")).toBeVisible();
     await expect(page.getByRole("link", { name: "Crear cuenta" })).toHaveAttribute(
       "href",
       "/sign-up",
@@ -18,7 +22,7 @@ test.describe("public pages", () => {
 
   test("login and sign-up pages are accessible", async ({ page }) => {
     await page.goto("/login");
-    await expect(page.getByRole("heading", { name: "Bienvenido de nuevo" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Iniciar sesión" })).toBeVisible();
     await expectAccessible(page);
     await page.goto("/sign-up");
     await expect(page.getByRole("heading", { name: "Crea tu cuenta" })).toBeVisible();

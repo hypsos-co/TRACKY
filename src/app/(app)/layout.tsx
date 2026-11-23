@@ -23,15 +23,14 @@ export default function AppLayout({ children }: LayoutProps<"/">) {
   return (
     <ToastProvider>
       <div className="min-h-dvh md:flex">
-        <div className="ambient" aria-hidden />
         <a
           href="#main"
-          className="sr-only z-50 rounded-full bg-accent px-4 py-2 text-accent-fg focus:not-sr-only focus:fixed focus:top-4 focus:left-4"
+          className="sr-only z-50 rounded-lg bg-accent px-4 py-2 text-accent-fg focus:not-sr-only focus:fixed focus:top-4 focus:left-4"
         >
           Saltar al contenido
         </a>
 
-        <aside className="glass sticky top-0 hidden h-dvh w-64 shrink-0 flex-col justify-between rounded-none border-y-0 border-l-0 p-4 md:flex">
+        <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col justify-between border-r border-border bg-bg-deep p-4 md:flex">
           <div className="flex flex-col gap-5">
             <Link
               href={ROUTES.dashboard}
@@ -40,7 +39,7 @@ export default function AppLayout({ children }: LayoutProps<"/">) {
             >
               <Logo />
             </Link>
-            <Suspense fallback={<div className="h-11 rounded-xl bg-surface" />}>
+            <Suspense fallback={<div className="h-10 rounded-[var(--radius-field)] bg-surface" />}>
               <Switcher />
             </Suspense>
             <CommandButton />
@@ -50,7 +49,7 @@ export default function AppLayout({ children }: LayoutProps<"/">) {
           </div>
           <Link
             href={ROUTES.settings}
-            className="rounded-2xl p-2 transition-colors hover:bg-surface"
+            className="rounded-[var(--radius-field)] p-2 transition-colors hover:bg-surface"
           >
             <Suspense fallback={<UserChipSkeleton />}>
               <UserChip />
@@ -75,7 +74,7 @@ export default function AppLayout({ children }: LayoutProps<"/">) {
 
         <main
           id="main"
-          className="mx-auto w-full max-w-6xl min-w-0 flex-1 px-4 pt-6 pb-32 sm:px-6 md:px-10 md:pt-10 md:pb-16"
+          className="mx-auto w-full max-w-[1440px] min-w-0 flex-1 animate-rise px-4 pt-6 pb-32 sm:px-6 md:px-8 md:pt-8 md:pb-16"
         >
           {children}
         </main>

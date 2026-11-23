@@ -1,5 +1,6 @@
 "use client";
 
+import { TrackerIcon } from "@/components/trackers/tracker-icon";
 import { useState, useTransition, type ReactNode } from "react";
 import {
   DndContext,
@@ -41,6 +42,8 @@ export type GridItem = {
   size: WidgetSize;
   /** Overrides the catalogue label in the widget header (e.g. the tracker's name). */
   title?: string;
+  /** Tracker icon key (tracker widgets). */
+  icon?: string;
   node: ReactNode;
 };
 type TrackerOption = { id: string; name: string; icon: string | null };
@@ -53,9 +56,11 @@ const SPAN: Record<WidgetSize, string> = {
 };
 
 export function DashboardGrid({
+  header,
   items: initial,
   trackers,
 }: {
+  header: ReactNode;
   items: GridItem[];
   trackers: TrackerOption[];
 }) {
@@ -94,21 +99,24 @@ export function DashboardGrid({
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex justify-end gap-2">
-        {editing ? (
-          <Button variant="glass" size="sm" onClick={() => setAdding(true)}>
-            <Plus className="size-4" aria-hidden /> Añadir widget
+    <div className="flex flex-col gap-6">
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        {header}
+        <div className="flex gap-2">
+          {editing ? (
+            <Button variant="secondary" size="sm" onClick={() => setAdding(true)}>
+              <Plus className="size-4" aria-hidden /> Añadir widget
+            </Button>
+          ) : null}
+          <Button
+            variant={editing ? "accent" : "ghost"}
+            size="sm"
+            onClick={() => setEditing((e) => !e)}
+            aria-pressed={editing}
+          >
+            <Settings2 className="size-4" aria-hidden /> {editing ? "Listo" : "Personalizar"}
           </Button>
-        ) : null}
-        <Button
-          variant={editing ? "accent" : "ghost"}
-          size="sm"
-          onClick={() => setEditing((e) => !e)}
-          aria-pressed={editing}
-        >
-          <Settings2 className="size-4" aria-hidden /> {editing ? "Listo" : "Personalizar"}
-        </Button>
+        </div>
       </div>
 
       {items.length ? (
@@ -122,6 +130,7 @@ export function DashboardGrid({
                     ...item,
                     node: latestById.get(item.id)?.node ?? item.node,
                     title: latestById.get(item.id)?.title ?? item.title,
+                    icon: latestById.get(item.id)?.icon ?? item.icon,
                   }}
                   editing={editing}
                   onRemove={() =>
@@ -184,9 +193,9 @@ function SortableWidget({
       aria-label={label}
       style={{ transform: CSS.Translate.toString(transform), transition }}
       className={cn(
-        "glass col-span-1 flex min-w-0 animate-rise flex-col rounded-[var(--radius-card)] p-5",
+        "card col-span-1 flex min-w-0 flex-col rounded-[var(--radius-card)] p-5",
         SPAN[item.size],
-        isDragging && "z-30 shadow-2xl ring-2 ring-ring",
+        isDragging && "z-30 shadow-[var(--shadow-float)] ring-2 ring-ring",
         editing && "ring-1 ring-border-strong",
       )}
     >
@@ -203,8 +212,9 @@ function SortableWidget({
             <GripVertical className="size-4" aria-hidden />
           </button>
         ) : null}
-        <h2 className="flex-1 text-[13px] font-medium tracking-[0.06em] text-fg-subtle uppercase">
-          {label}
+        <h2 className="flex min-w-0 flex-1 items-center gap-2 text-[14px] font-medium text-fg-muted">
+          {item.icon !== undefined ? <TrackerIcon icon={item.icon || null} /> : null}
+          <span className="truncate">{label}</span>
         </h2>
         {editing ? (
           <>
@@ -269,9 +279,7 @@ function AddWidgetDialog({
       open={open}
       onClose={close}
       title={picking ? WIDGET_TYPES[picking].label : "Añadir widget"}
-      description={
-        picking ? "Elige qué tracker mostrar." : "Todos los widgets muestran tus datos reales."
-      }
+      description={picking ? "Elige qué tracker mostrar" : "Todos muestran tus datos reales"}
     >
       {picking ? (
         trackers.length ? (
@@ -289,7 +297,6 @@ function AddWidgetDialog({
             >
               {trackers.map((t) => (
                 <option key={t.id} value={t.id}>
-                  {t.icon ? `${t.icon} ` : ""}
                   {t.name}
                 </option>
               ))}
@@ -326,7 +333,7 @@ function AddWidgetDialog({
                 type="button"
                 disabled={pending}
                 onClick={() => (needsTracker(type) ? setPicking(type) : add(type))}
-                className="flex h-full w-full flex-col items-start gap-1 rounded-2xl border border-border p-4 text-left transition-colors hover:border-border-strong hover:bg-surface-strong"
+                className="flex h-full w-full flex-col items-start gap-1 rounded-[var(--radius-field)] border border-border p-4 text-left transition-colors hover:border-border-strong hover:bg-surface-strong"
               >
                 <span className="font-medium">{WIDGET_TYPES[type].label}</span>
                 <span className="text-[13px] text-fg-muted">{WIDGET_TYPES[type].description}</span>

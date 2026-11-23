@@ -9,7 +9,7 @@ export default function UpdatePasswordPage() {
   return (
     <AuthShell
       title="Elige una nueva contraseña"
-      subtitle="La usarás a partir de ahora para entrar."
+      subtitle="La usarás a partir de ahora para entrar"
     >
       <UpdatePasswordForm />
     </AuthShell>

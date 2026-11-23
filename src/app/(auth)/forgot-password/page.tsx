@@ -9,7 +9,7 @@ export default function ForgotPasswordPage() {
   return (
     <AuthShell
       title="Recupera tu contraseña"
-      subtitle="Te enviaremos un enlace para crear una nueva."
+      subtitle="Te enviaremos un enlace para crear una nueva"
       footer={
         <>
           ¿La recordaste? <TextLink href={ROUTES.login}>Vuelve a entrar</TextLink>

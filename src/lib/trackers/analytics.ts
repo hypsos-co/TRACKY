@@ -174,8 +174,10 @@ export function chartTitle(spec: ChartSpec) {
 export function chartFormatter(spec: ChartSpec): (v: number) => string {
   const plain = new Intl.NumberFormat("es-ES", { maximumFractionDigits: 2 });
   const y = spec.y;
-  if (!y || spec.agg === "count") return (v) => plain.format(v);
-  return (v) => formatValue(y, Math.round(v * 100) / 100) || plain.format(v);
+  // A real minus sign (U+2212) instead of the hyphen Intl uses.
+  const minus = (t: string) => t.replace(/^-/, "\u2212");
+  if (!y || spec.agg === "count") return (v) => minus(plain.format(v));
+  return (v) => minus(formatValue(y, Math.round(v * 100) / 100) || plain.format(v));
 }
 
 // ── Filtering & sorting for table/list/cards views ──────────────────────────

@@ -18,7 +18,8 @@ Lee `docs/ROADMAP.md` para saber en qué fase estamos y `docs/MASTER_PROMPT.md` 
 - **Rutas:** default-deny. Una ruta pública nueva debe añadirse en `src/lib/routes.ts` (y su test).
 - **Cache Components:** cualquier lectura de sesión/cookies/searchParams va dentro de `<Suspense>` con un esqueleto. No hagas `await` de la sesión en el nivel superior de un layout.
 - **Datos:** toda tabla nueva → migración en `supabase/migrations/` con RLS + políticas por operación con `(select auth.uid())` + archivo pgTAP en `supabase/tests/database/`. Después `npm run db:types`.
-- **UI:** solo tokens semánticos (`bg-surface`, `text-fg-muted`, `bg-accent`…); nunca HEX sueltos. Componentes base en `src/components/ui/`. Lima = una sola CTA por pantalla. Ver `docs/DESIGN_SYSTEM.md`.
+- **UI:** solo tokens semánticos (`bg-card`, `bg-surface`, `text-fg-muted`, `bg-accent`…); nunca HEX sueltos. Componentes base en `src/components/ui/`. Lima = una sola CTA por pantalla + el punto `.now-dot` (firma). Sin vidrio, brillos, manchas de color, emojis, mayúsculas espaciadas ni saludos. Ver `docs/DESIGN_SYSTEM.md` §1.
+- **unslop:** la skill está instalada a nivel de proyecto (`.claude/settings.json`). Úsala (`/unslop`) al crear o rediseñar una pantalla y pásale su checklist antes de dar la UI por terminada; respeta la marca y la dirección de `DESIGN_SYSTEM.md` §1. Crédito CC BY 4.0 a Damir Sokolovsky.
 - **Accesibilidad:** etiqueta visible + error textual en formularios; el nombre accesible contiene el texto visible; E2E con `expectAccessible(page)`.
 - **Sin elementos falsos:** la navegación (`src/components/app/nav-items.ts`) solo lista módulos que existen. Ningún botón sin acción real.
 - Textos de interfaz en **español**.

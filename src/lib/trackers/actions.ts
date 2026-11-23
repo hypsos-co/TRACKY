@@ -11,6 +11,7 @@ import type { Json } from "@/lib/supabase/database.types";
 /** JSON object column (never null). */
 type JsonObject = { [key: string]: Json | undefined };
 import { checkFormula } from "./formula";
+import { TRACKER_ICON_KEYS, trackerIconKey } from "./icons";
 import {
   configSchema,
   PROPERTY_TYPE_LIST,
@@ -52,7 +53,7 @@ function remapConfig(config: Record<string, unknown>, map: (key: string) => stri
 
 const createSchema = z.object({
   name: z.string().trim().min(1, "Ponle un nombre.").max(120),
-  icon: z.string().trim().max(16).nullable().optional(),
+  icon: z.enum(TRACKER_ICON_KEYS).nullable().optional(),
   description: z.string().trim().max(2000).nullable().optional(),
   templateKey: z.string().max(40).optional(),
   duplicateFromId: uuid.optional(),
@@ -114,7 +115,7 @@ export async function createTracker(
         config: remapConfig((w.config ?? {}) as Record<string, unknown>, (id) => nameOf.get(id)),
       })),
       date: src?.date_property_id ? nameOf.get(src.date_property_id) : undefined,
-      icon: src?.icon,
+      icon: src?.icon ? trackerIconKey(src.icon) : null,
       description: src?.description,
     };
   } else if (v.templateKey) {
@@ -200,7 +201,7 @@ export async function createTracker(
 
 const trackerUpdate = z.object({
   name: z.string().trim().min(1, "Ponle un nombre.").max(120),
-  icon: z.string().trim().max(16).nullable(),
+  icon: z.enum(TRACKER_ICON_KEYS).nullable(),
   description: z.string().trim().max(2000).nullable(),
   datePropertyId: uuid.nullable(),
 });

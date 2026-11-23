@@ -18,7 +18,7 @@ export default function ProjectsPage({ searchParams }: PageProps<"/projects">) {
     <div className="flex flex-col gap-6">
       <PageHeader
         title="Proyectos"
-        description="Agrupa tareas y sigue su avance."
+        description="Agrupa tareas y sigue su avance"
         actions={<ProjectFormButton />}
       />
       <Suspense fallback={<GridSkeleton />}>
@@ -48,10 +48,10 @@ async function Projects({
                 href={`/projects/${p.id}`}
                 className="block h-full rounded-[var(--radius-card)]"
               >
-                <Card className="flex h-full flex-col gap-4 p-5 transition-transform duration-300 ease-[var(--ease-out)] hover:-translate-y-0.5">
+                <Card className="flex h-full flex-col gap-4 p-5 transition-colors hover:border-border-strong">
                   <div className="flex items-start justify-between gap-3">
                     <h2 className="text-[17px] leading-snug font-medium break-words">{p.name}</h2>
-                    <span className="shrink-0 rounded-full bg-surface-strong px-2.5 py-1 text-[12px] text-fg-muted">
+                    <span className="shrink-0 text-[12px] text-fg-subtle tabular-nums">
                       {PROJECT_STATUS_LABELS[p.status]}
                     </span>
                   </div>

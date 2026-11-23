@@ -16,7 +16,7 @@ export default function SignUpSuccessPage() {
         </>
       }
     >
-      <div className="flex items-center gap-3 rounded-2xl border border-border bg-surface px-4 py-3 text-[14px] text-fg-muted">
+      <div className="flex items-center gap-3 rounded-[var(--radius-field)] border border-border bg-surface px-4 py-3 text-[14px] text-fg-muted">
         <MailCheck className="size-5 shrink-0 text-success-text" aria-hidden />
         Si no lo ves en unos minutos, mira en la carpeta de spam.
       </div>

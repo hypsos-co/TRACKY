@@ -33,19 +33,19 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             <motion.div
               key={t.id}
               role={t.tone === "error" ? "alert" : "status"}
-              initial={{ opacity: 0, y: 12, scale: 0.97 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 8, scale: 0.97 }}
-              transition={{ type: "spring", stiffness: 500, damping: 36 }}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 4 }}
+              transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
               className={cn(
-                "glass-bar pointer-events-auto flex max-w-md items-center gap-2.5 rounded-full px-4 py-2.5 text-[14px] font-medium",
+                "panel-float pointer-events-auto flex max-w-md items-center gap-2.5 rounded-[var(--radius-field)] px-4 py-2.5 text-[14px] font-medium",
                 t.tone === "error" ? "text-danger-text" : "text-fg",
               )}
             >
               {t.tone === "error" ? (
                 <CircleAlert className="size-4 shrink-0" aria-hidden />
               ) : (
-                <CircleCheck className="size-4 shrink-0 text-success-text" aria-hidden />
+                <CircleCheck className="size-4 shrink-0 text-fg-muted" aria-hidden />
               )}
               {t.message}
             </motion.div>

@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 export function QuickAdd({
   projectId,
   dueDate,
-  placeholder = "Añadir tarea… (prueba: «mañana 17:00 !alta #casa»)",
+  placeholder = "Añadir tarea, p. ej. «mañana 17:00 !alta #casa»",
   className,
   autoFocus,
 }: {
@@ -41,9 +41,9 @@ export function QuickAdd({
   return (
     <form
       onSubmit={submit}
-      className={cn("glass flex items-center gap-2 rounded-2xl px-3", className)}
+      className={cn("card flex items-center gap-2 rounded-xl px-3", className)}
     >
-      <Plus className="size-5 shrink-0 text-accent" aria-hidden />
+      <Plus className="size-4 shrink-0 text-fg-subtle" aria-hidden />
       <label htmlFor="quick-add" className="sr-only">
         Añadir tarea
       </label>
@@ -56,13 +56,13 @@ export function QuickAdd({
         autoFocus={autoFocus}
         maxLength={500}
         autoComplete="off"
-        className="h-12 min-w-0 flex-1 bg-transparent text-[15px] outline-none placeholder:text-fg-subtle"
+        className="h-11 min-w-0 flex-1 bg-transparent text-[15px] outline-none placeholder:text-fg-subtle"
       />
       <button
         type="submit"
         disabled={pending || !value.trim()}
         aria-label="Crear tarea"
-        className="grid size-9 place-items-center rounded-full text-fg-muted transition-colors hover:bg-surface-strong hover:text-fg disabled:opacity-40"
+        className="grid size-8 place-items-center rounded-lg text-fg-muted transition-colors hover:bg-surface-strong hover:text-fg disabled:opacity-40"
       >
         {pending ? <Spinner /> : <CornerDownLeft className="size-4" aria-hidden />}
       </button>

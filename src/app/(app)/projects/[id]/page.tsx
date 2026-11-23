@@ -52,11 +52,11 @@ async function ProjectView({ params, searchParams }: PageProps<"/projects/[id]">
 
   return (
     <>
-      <Card className="flex animate-rise flex-col gap-4 p-6">
+      <Card className="flex flex-col gap-4 p-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0">
             <p className="text-[13px] text-fg-subtle">{PROJECT_STATUS_LABELS[project.status]}</p>
-            <h1 className="mt-1 text-[30px] leading-tight font-medium tracking-[-0.03em] break-words">
+            <h1 className="mt-1 text-[30px] leading-tight font-medium break-words">
               {project.name}
             </h1>
             {project.description ? (
@@ -77,7 +77,7 @@ async function ProjectView({ params, searchParams }: PageProps<"/projects/[id]">
         <ProgressBar done={project.progress.done} total={project.progress.total} />
       </Card>
 
-      <QuickAdd projectId={project.id} placeholder="Añadir tarea a este proyecto…" />
+      <QuickAdd projectId={project.id} placeholder="Añadir tarea a este proyecto" />
       {topLevel.length ? (
         <TaskList tasks={topLevel} today={today} showProject={false} />
       ) : (

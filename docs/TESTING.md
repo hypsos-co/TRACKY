@@ -25,11 +25,11 @@ Los E2E usan un **build de producción** (`next start` en el puerto 3100) contra
 
 ## 3. Cobertura actual (Fases 1–3)
 
-### Unitarias (100)
+### Unitarias (101)
 
 - `formula.test.ts` — gramática, precedencia, alias en español, errores y límites (longitud, nodos, profundidad, pasos) del motor de fórmulas.
 - `trackers.test.ts` — conversión y validación por tipo (números en español, duraciones, opciones, rangos, URLs seguras), fórmulas encadenadas, plantillas válidas, series/estadísticas/tendencia, filtros y orden, CSV y emparejado de columnas.
-- `tracker-widgets.test.ts` — especificación de gráficos (configuración defensiva), datos de los widgets del panel, catálogo.
+- `tracker-widgets.test.ts` — especificación de gráficos (configuración defensiva), datos de los widgets del panel, catálogo, iconos de línea de los trackers (claves, emojis antiguos y valor por defecto).
 
 - `phase2-logic.test.ts` — fechas por zona horaria y DST, cuadrícula mensual, etiquetas relativas, parser de alta rápida en español, agrupación y progreso de tareas.
 

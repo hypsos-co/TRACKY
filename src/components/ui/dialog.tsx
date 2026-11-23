@@ -52,16 +52,16 @@ export function Dialog({
     >
       <div
         className={cn(
-          "glass-strong flex max-h-[min(88dvh,880px)] flex-col overflow-hidden bg-[var(--surface-solid)]",
-          variant === "center" && "rounded-[var(--radius-card)]",
+          "panel-float flex max-h-[min(88dvh,880px)] flex-col overflow-hidden",
+          variant === "center" && "rounded-[var(--radius-panel)]",
           variant === "sheet" &&
-            "rounded-t-[var(--radius-card)] md:h-dvh md:max-h-none md:rounded-none md:rounded-l-[var(--radius-card)]",
+            "rounded-t-[var(--radius-panel)] md:h-dvh md:max-h-none md:rounded-none md:rounded-l-[var(--radius-panel)]",
           className,
         )}
       >
         <div className="flex items-start justify-between gap-4 px-5 pt-5 pb-3 sm:px-6">
           <div className="min-w-0">
-            <h2 id={titleId} className="text-[18px] font-medium tracking-[-0.015em]">
+            <h2 id={titleId} className="text-[18px] font-medium">
               {title}
             </h2>
             {description ? <p className="mt-0.5 text-[13px] text-fg-muted">{description}</p> : null}
@@ -70,7 +70,7 @@ export function Dialog({
             type="button"
             onClick={onClose}
             aria-label="Cerrar"
-            className="grid size-9 shrink-0 place-items-center rounded-full text-fg-muted transition-colors hover:bg-surface-strong hover:text-fg"
+            className="grid size-9 shrink-0 place-items-center rounded-lg text-fg-muted transition-colors hover:bg-surface-strong hover:text-fg"
           >
             <X className="size-[18px]" aria-hidden />
           </button>

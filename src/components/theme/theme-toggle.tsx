@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useSyncExternalStore } from "react";
-import { motion } from "motion/react";
 import { Monitor, Moon, Sun } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { THEME_STORAGE_KEY, type ThemePreference } from "./theme-script";
@@ -63,7 +62,7 @@ export function ThemeToggle({ className }: { className?: string }) {
     <div
       role="radiogroup"
       aria-label="Tema"
-      className={cn("glass inline-flex rounded-full p-1", className)}
+      className={cn("inline-flex rounded-xl border border-border bg-surface p-1", className)}
     >
       {OPTIONS.map(({ value, label, Icon }) => {
         const selected = current === value;
@@ -75,19 +74,14 @@ export function ThemeToggle({ className }: { className?: string }) {
             aria-checked={selected}
             onClick={() => choose(value)}
             className={cn(
-              "relative inline-flex h-9 items-center gap-2 rounded-full px-4 text-[13px] font-medium transition-colors",
-              selected ? "text-accent-fg" : "text-fg-muted hover:text-fg",
+              "inline-flex h-8 items-center gap-2 rounded-lg px-3 text-[13px] font-medium transition-colors",
+              selected
+                ? "bg-surface-strong text-fg shadow-[var(--highlight)]"
+                : "text-fg-muted hover:text-fg",
             )}
           >
-            {selected ? (
-              <motion.span
-                layoutId="theme-pill"
-                className="absolute inset-0 rounded-full bg-accent"
-                transition={{ type: "spring", stiffness: 500, damping: 38 }}
-              />
-            ) : null}
-            <Icon className="relative size-4" aria-hidden />
-            <span className="relative">{label}</span>
+            <Icon className="size-4" aria-hidden />
+            <span>{label}</span>
           </button>
         );
       })}

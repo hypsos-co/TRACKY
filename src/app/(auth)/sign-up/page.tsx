@@ -9,7 +9,7 @@ export default function SignUpPage() {
   return (
     <AuthShell
       title="Crea tu cuenta"
-      subtitle="Tu centro de control personal empieza aquí."
+      subtitle="Tareas, calendario y trackers en un panel que montas tú"
       footer={
         <>
           ¿Ya tienes cuenta? <TextLink href={ROUTES.login}>Inicia sesión</TextLink>

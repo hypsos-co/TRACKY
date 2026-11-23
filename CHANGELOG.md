@@ -4,6 +4,10 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es/1.1.0/).
 
 ## [Sin publicar]
 
+### Cambiado
+
+- **Diseño pulido con la skill [unslop](https://github.com/heydamir/unslop)** (Damir Sokolovsky, CC BY 4.0), instalada en el proyecto: fondo plano sin manchas de luz, tarjetas sólidas en lugar de vidrio, sin halos en los botones, esquinas por tamaño, etiquetas sin mayúsculas, títulos sin saludo (el panel se titula con el día), textos más cortos, una sola acción lima por pantalla y el **punto lima** como firma (último registro, día de hoy, sección activa). Iconos de línea para los trackers (los emojis existentes se muestran con su equivalente). Portada nueva con lo que la app hace hoy y una vista previa real del producto. Marca intacta: Royal, lima, Ink/Ice, SF Pro y logo.
+
 ### Añadido
 
 - **Fase 3 · Trackers:** bases de datos propias con 18 tipos de propiedad, fórmulas seguras (con alias en español), relaciones, plantillas (peso, agua, sueño, gastos, lecturas, entrenamientos, estudio, contenido), vistas guardadas (tabla, lista, tarjetas, kanban, calendario, gráfico con estadísticas y tendencia), importación CSV/Excel con revisión de errores y duplicados, y widgets «Gráfico de tracker» y «Último valor» en el panel. Ver `docs/TRACKERS.md`.
@@ -14,6 +18,8 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es/1.1.0/).
 
 ### Corregido
 
+- Contraste AA del texto de error y del texto secundario sobre las superficies elevadas del tema oscuro.
+- La barra de progreso animaba `width`; ahora usa `transform`.
 - El gráfico no se adaptaba al ancho cuando un tracker pasaba de vacío a tener datos; en móvil alejaba el zoom de toda la página.
 - Accesibilidad (WCAG 2.5.3, 1.4.3, 4.1.2) detectada por axe en el nuevo shell: nombres accesibles, filas de tarea sin controles anidados, contraste de etiquetas; widgets del dashboard que no se refrescaban tras crear una tarea.
 

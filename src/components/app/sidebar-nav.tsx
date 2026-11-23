@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { NAV_ITEMS } from "./nav-items";
 
@@ -10,7 +9,7 @@ function isActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-/** Desktop sidebar links with a sliding active indicator. */
+/** Desktop sidebar links. Active: a surface step + the lime "now" dot (signature). */
 export function SidebarNav() {
   return <SidebarLinks pathname={usePathname()} />;
 }
@@ -22,7 +21,7 @@ export function SidebarNavFallback() {
 
 function SidebarLinks({ pathname }: { pathname: string }) {
   return (
-    <nav aria-label="Principal" className="flex flex-col gap-1">
+    <nav aria-label="Principal" className="flex flex-col gap-0.5">
       {NAV_ITEMS.map(({ href, label, Icon }) => {
         const active = isActive(pathname, href);
         return (
@@ -31,19 +30,15 @@ function SidebarLinks({ pathname }: { pathname: string }) {
             href={href}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "relative flex h-10 items-center gap-3 rounded-xl px-3 text-[14px] font-medium transition-colors",
-              active ? "text-fg" : "text-fg-muted hover:bg-surface hover:text-fg",
+              "flex h-9 items-center gap-2.5 rounded-lg px-2.5 text-[14px] font-medium transition-colors",
+              active
+                ? "bg-surface-strong text-fg shadow-[var(--highlight)]"
+                : "text-fg-muted hover:bg-surface hover:text-fg",
             )}
           >
-            {active ? (
-              <motion.span
-                layoutId="sidebar-active"
-                className="absolute inset-0 rounded-xl border border-border-strong bg-surface-strong"
-                transition={{ type: "spring", stiffness: 500, damping: 40 }}
-              />
-            ) : null}
-            <Icon className={cn("relative size-[18px]", active && "text-accent")} aria-hidden />
-            <span className="relative">{label}</span>
+            <Icon className="size-[18px] shrink-0" aria-hidden />
+            <span className="flex-1">{label}</span>
+            {active ? <span className="now-dot" aria-hidden /> : null}
           </Link>
         );
       })}
@@ -64,7 +59,7 @@ function TabLinks({ pathname }: { pathname: string }) {
   return (
     <nav
       aria-label="Principal"
-      className="glass-bar fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-40 flex justify-around rounded-full p-1.5 md:hidden"
+      className="bar-float fixed inset-x-2 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-40 flex justify-around rounded-[var(--radius-card)] p-1 md:hidden"
     >
       {NAV_ITEMS.map(({ href, label, Icon }) => {
         const active = isActive(pathname, href);
@@ -74,19 +69,15 @@ function TabLinks({ pathname }: { pathname: string }) {
             href={href}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "relative flex h-12 flex-1 flex-col items-center justify-center gap-0.5 rounded-full text-[11px] font-medium transition-colors",
-              active ? "text-accent-fg" : "text-fg-muted",
+              "relative flex h-13 min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-xl text-[11px] font-medium transition-colors",
+              active ? "bg-surface-strong text-fg" : "text-fg-muted",
             )}
           >
             {active ? (
-              <motion.span
-                layoutId="tabbar-active"
-                className="absolute inset-0 rounded-full bg-accent"
-                transition={{ type: "spring", stiffness: 500, damping: 40 }}
-              />
+              <span className="now-dot absolute top-1.5 right-[calc(50%-17px)]" aria-hidden />
             ) : null}
-            <Icon className="relative size-5" aria-hidden />
-            <span className="relative">{label}</span>
+            <Icon className="size-[18px]" aria-hidden />
+            <span className="whitespace-nowrap">{label}</span>
           </Link>
         );
       })}

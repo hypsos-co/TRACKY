@@ -12,7 +12,7 @@ export const metadata: Metadata = { title: "Calendario" };
 export default function CalendarPage({ searchParams }: PageProps<"/calendar">) {
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader title="Calendario" description="Eventos y tareas con fecha en un solo lugar." />
+      <PageHeader title="Calendario" description="Eventos y tareas con fecha" />
       <Suspense fallback={<GridSkeleton cards={2} />}>
         <Calendar searchParams={searchParams} />
       </Suspense>

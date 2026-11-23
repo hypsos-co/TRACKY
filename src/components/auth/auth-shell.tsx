@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { Logo } from "@/components/brand/logo";
 import { Card } from "@/components/ui/card";
 
-/** Centered glass card used by every signed-out screen. */
+/** Centered card card used by every signed-out screen. */
 export function AuthShell({
   title,
   subtitle,
@@ -18,27 +18,17 @@ export function AuthShell({
   return (
     <main className="flex min-h-dvh flex-col items-center justify-center px-4 py-10 sm:py-16">
       <div className="ambient" aria-hidden />
-      <Link
-        href="/"
-        className="mb-8 animate-fade rounded-full px-2 py-1"
-        aria-label="TRACKY, ir al inicio"
-      >
+      <Link href="/" className="mb-8 rounded-lg px-2 py-1" aria-label="TRACKY, ir al inicio">
         <Logo />
       </Link>
       <Card className="w-full max-w-[420px] animate-rise p-6 sm:p-8">
-        <h1 className="text-[26px] leading-tight font-medium tracking-[-0.025em] text-balance">
-          {title}
-        </h1>
+        <h1 className="text-[26px] leading-tight font-medium text-balance">{title}</h1>
         {subtitle ? (
           <p className="mt-2 text-[15px] leading-relaxed text-fg-muted">{subtitle}</p>
         ) : null}
         <div className="mt-7">{children}</div>
       </Card>
-      {footer ? (
-        <p className="mt-6 animate-fade text-center text-[14px] text-fg-muted [animation-delay:150ms]">
-          {footer}
-        </p>
-      ) : null}
+      {footer ? <p className="mt-6 text-center text-[14px] text-fg-muted">{footer}</p> : null}
     </main>
   );
 }
@@ -63,7 +53,7 @@ export function FormSkeleton({ fields = 2 }: { fields?: number }) {
           <div className="h-12 rounded-[var(--radius-field)] bg-surface" />
         </div>
       ))}
-      <div className="mt-2 h-11 rounded-full bg-surface-strong" />
+      <div className="mt-2 h-11 rounded-[var(--radius-field)] bg-surface-strong" />
     </div>
   );
 }
