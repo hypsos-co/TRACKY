@@ -84,6 +84,11 @@ export function TrackerChart({
   const { ticks, sy, sx, band } = geo;
   const fmtX = (x: string) => formatDay(x, { day: "numeric", month: "short" });
   const xLabelEvery = Math.max(1, Math.ceil(points.length / Math.max(2, Math.floor(geo.iw / 70))));
+  // The last date is always drawn (end-anchored on lines), so a regular label
+  // closer than one label width to it is dropped instead of overlapping.
+  const minGapToLast = kind === "line" ? 72 : 52;
+  const showXLabel = (i: number) =>
+    i === last || (i % xLabelEvery === 0 && sx(last) - sx(i) >= minGapToLast);
   const last = points.length - 1;
   const baseline = sy(Math.max(ticks[0], Math.min(0, ticks[ticks.length - 1])));
 
@@ -190,7 +195,7 @@ export function TrackerChart({
                 </g>
               ))}
               {points.map((p, i) =>
-                i % xLabelEvery === 0 || i === last ? (
+                showXLabel(i) ? (
                   <text
                     key={p.x}
                     x={sx(i)}

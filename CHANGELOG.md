@@ -18,6 +18,7 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es/1.1.0/).
 
 ### Corregido
 
+- Panel (auditoría unslop): el widget Calendario escribía «Noviembre De 2026»; las fechas del eje del gráfico de tracker se pisaban en móvil; las barras de «Estadísticas» pasan a ser finas, con extremo redondeado sobre una línea base y sin barra en los días a 0; «Personalizar» se alinea con el título en móvil.
 - Contraste AA del texto de error y del texto secundario sobre las superficies elevadas del tema oscuro.
 - La barra de progreso animaba `width`; ahora usa `transform`.
 - El gráfico no se adaptaba al ancho cuando un tracker pasaba de vacío a tener datos; en móvil alejaba el zoom de toda la página.
