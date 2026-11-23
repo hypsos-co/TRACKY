@@ -100,7 +100,7 @@ export function DashboardGrid({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-wrap items-end justify-between gap-3">
+      <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-end sm:justify-between">
         {header}
         <div className="flex gap-2">
           {editing ? (
@@ -113,6 +113,8 @@ export function DashboardGrid({
             size="sm"
             onClick={() => setEditing((e) => !e)}
             aria-pressed={editing}
+            // ghost padding would push the icon 12px off the title's left edge
+            className={editing ? undefined : "max-sm:-ml-3"}
           >
             <Settings2 className="size-4" aria-hidden /> {editing ? "Listo" : "Personalizar"}
           </Button>

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import {
   addDays,
+  capitalize,
   dayDiff,
   dueLabel,
   formatDay,
@@ -142,24 +143,26 @@ export function TaskStatsWidget({
         <p className="text-[13px] text-fg-subtle">Sin tareas completadas en los últimos 7 días</p>
       ) : (
         <figure>
-          <div className="flex h-24 items-end gap-1" aria-hidden>
+          <div className="flex h-24 items-end gap-1 border-b border-border" aria-hidden>
             {counts.map((c, i) => (
-              <div key={days[i]} className="flex flex-1 flex-col items-center gap-1">
-                <div
-                  className={cn(
-                    "w-full rounded-t-sm",
-                    !c
-                      ? "bg-surface-strong"
-                      : i === counts.length - 1
-                        ? "bg-chart-1"
-                        : "bg-fg-subtle/45",
-                  )}
-                  style={{ height: `${Math.max(4, (c / max) * 80)}px` }}
-                />
-                <span className="text-[11px] text-fg-subtle">
-                  {formatDay(days[i], { weekday: "narrow" })}
-                </span>
+              <div key={days[i]} className="flex flex-1 justify-center">
+                {c ? (
+                  <div
+                    className={cn(
+                      "w-full max-w-6 rounded-t",
+                      i === counts.length - 1 ? "bg-chart-1" : "bg-fg-subtle/45",
+                    )}
+                    style={{ height: `${Math.max(4, (c / max) * 88)}px` }}
+                  />
+                ) : null}
               </div>
+            ))}
+          </div>
+          <div className="mt-1 flex gap-1" aria-hidden>
+            {days.map((d) => (
+              <span key={d} className="flex-1 text-center text-[11px] text-fg-subtle">
+                {formatDay(d, { weekday: "narrow" })}
+              </span>
             ))}
           </div>
           <figcaption className="mt-1 text-[12px] text-fg-subtle">
@@ -227,8 +230,8 @@ export function CalendarMonthWidget({
   for (const e of events) for (let d = e.startDay; d <= e.endDay; d = addDays(d, 1)) busy.add(d);
   return (
     <>
-      <p className="mb-2 text-[15px] font-medium capitalize">
-        {formatDay(today, { month: "long", year: "numeric" })}
+      <p className="mb-2 text-[15px] font-medium">
+        {capitalize(formatDay(today, { month: "long", year: "numeric" }))}
       </p>
       <div className="grid grid-cols-7 gap-y-1 text-center text-[12px]">
         {days.slice(0, 7).map((d) => (
